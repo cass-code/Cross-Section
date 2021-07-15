@@ -101,7 +101,7 @@ abstract: |
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = FALSE, message = FALSE, warning = FALSE, fig.width = 6, fig.height = 5, fig.pos="H", fig.pos = 'H')
-# Note: Include = FALSE implies the code is executed, but not printed in your pdf.
+# Note: echo = FALSE implies the code is executed, but not printed in your pdf.
 # warning and message = FALSE implies ugly messages and warnings are removed from your pdf.
 # These should be picked up when you execute the command chunks (code sections below) in your rmd, not printed in your paper!
 
@@ -123,41 +123,112 @@ library(tidyverse)
 
 # Introduction \label{Introduction}
 
+You may suggest any application using one or a combination of techniques that we have learnt
+in this course.
+You should NOT write an extensive essay about the topic of interest, nor should you conduct
+an extensive literature review behind it: you should only reference articles that support the
+motivation for your econometric strategy (in the quest of finding a causal interpretation of a
+relationship that you are modeling).
+Provide descriptive statistics and graphs to aid in your discussion.
+The assignment should be between 3-6 pages, including your tables and figures.
 
+You are required to go beyond simply estimating and presenting your results, but to convince
+the reader of their robustness by presenting alternative specifications. You should apply
+different estimators and specifications where possible.
+Discuss the shortcomings of the estimators in obtaining a causal effect and argue why your
+strategy is the best available to obtain a causal effect that satisfies relevant assumptions.
+
+Determine an effect of interest and find instrumental variables to estimate it
+causally. If possible, use more than one instrument. Given the LATE
+assumptions, try and explain why your results differ and which is likely to
+represent the causal effect you are looking for. Conduct sufficient specification
+tests to establish whether you are overidentifying your instrument set or whether
+the IVs shift the estimates enough to indicate that OLS would be inconsistent.
 
 
 Writing in Rmarkdown is surprizingly easy - see [this website](https://www.rstudio.com/wp-content/uploads/2015/03/rmarkdown-reference.pdf) cheatsheet for a summary on writing Rmd writing tips.
 
-# Data  {-}
+# Data \label{data}
 
-Notice how I used the curly brackets and dash to remove the numbering of the data section.
+mention survey design for NIDS
 
-Discussion of data should be thorough with a table of statistics and ideally a figure.
+# Methodology \label{meth}
+This project makes use of 4 different instrument variables: fathers occupation, mothers occupation, mothers education and fathers education
 
-In your tempalte folder, you will find a Data and a Code folder. In order to keep your data files neat, store all of them in your Data folder. Also, I strongly suggest keeping this Rmd file for writing and executing commands, not writing out long pieces of data-wrangling. In the example below, I simply create a ggplot template for scatter plot consistency. I suggest keeping all your data in a data folder.
+# Results \label{results}
+
+```{r, results = 'asis'}
+library(haven)
+library(ivreg)
+install.packages("modelsummary")
+list.files('code/', full.names = T, recursive = T) %>% as.list() %>% walk(~source(.))
+data <- read_dta("data/Adult_W5_Anon_V1.0.0.dta")
+df1 <- reg1_clean(data)
+
+
+df2 <- reg2_clean(data)
+lm1 <-lm(income ~ age+ age2+ school+tertiary, dfiv)
+lm2 <-lm(income ~ age+ age2+ school+tertiary + race + gender, df2)
+summary(lm2)
+
+dfiv <- iv1_clean(data)
+iv1 <- ivreg(income ~ age + age2 | school + tertiary |
+  father_schl + father_tert, data = dfiv)
+summary(iv)
+
+
+if(!require(huxtable)) install.packages(huxtable)
+library(huxtable)
+data(df, package = 'ggplot2')
+Title <- "Regression Output"
+Label <- "Reg01"
+lm1 <- lm(income ~ age)
+#lm2 <- lm(price ~ depth, diamonds)
+lm3 <- lm(price ~ carat + depth, diamonds)
+htab <-
+huxreg(lm1, iv1,
+                statistics = c(N = "nobs", R2 = "r.squared"),
+                note = "%stars%.") %>%
+  set_caption(Title) %>%
+  set_label(Label)
+font_size(htab) <- 12
+
+# Now simply call the table:
+htab
+
+```
+
+
 
 <!-- The following is a code chunk. It must have its own unique name (after the r), or no name. After the comma follows commands for R which are self-explanatory. By default, the code and messages will not be printed in your pdf, just the output: -->
 
-```{r Figure1,  warning =  FALSE, fig.align = 'center', fig.cap = "Caption Here \\label{Figure1}", fig.ext = 'png', fig.height = 3, fig.width = 6}
+```{r Income,  warning =  FALSE, fig.align = 'center', fig.cap = "Income and Education Relationship \\label{Figure1}", fig.ext = 'png', fig.height = 3, fig.width = 6}
 
   # This is just a random plot to show you a plot. This is done if the getwd() does not point to your Template's directory.
   # Set WD below to your project's working directory.
+list.files('code/', full.names = T, recursive = T) %>% as.list() %>% walk(~source(.))
+dfplot <- plot_eduInc(data) 
 
+library(ggplot2)
   g <-
-  ggplot(data = mtcars) +
-  geom_point(aes(x = disp, y = hp, color = cyl)) +
+  ggplot(data = dfplot,aes(x = education, y = income)) +
+  geom_point() +
+    stat_smooth(method = "lm",
+        col = "#C42126",
+        se = FALSE,
+        size = 1) +
   theme_bw() +
   # theme(legend.position = "none") +
   theme(plot.title = element_text(size = 10)) +
   theme(axis.title = element_text(size = 10),
         axis.title.x = element_text()) +
-  labs(y = "y-axis", x = "x-axis", title = "Some amazing plot")
+  labs(y = "Income", x = "Education", title = "Income and Education Relationship")
 
 g
 
 ```
 
-To make your graphs look extra nice in latex world, you could use Tikz device. Replace dev - 'png' with 'tikz' in the chunk below. Notice this makes the build time longer and produces extra tex files - so if you are comfortable with this, set your device to Tikz and try it out:
+
 
 ```{r Figure2, include = FALSE, warning =  FALSE, fig.align = 'center', fig.cap = "Caption Here \\label{Figure2}", fig.height = 3, fig.width = 6, dev = 'png'}
 
@@ -169,35 +240,9 @@ To reference the plot above, add a ``\\label'' after the caption in the chunk he
 
 I very strongly suggest using ggplot2 (ideally in combination with dplyr) using the ggtheme package to change the themes of your figures.
 
-Also note the information that I have placed above the chunks in the code chunks for the figures. You can edit any of these easily - visit the Rmarkdown webpage for more information.
 
 # Splitting a page
 
-You can also very easily split a page using built-in Pandoc formatting. I comment this out in the code (as this has caused issues building the pdf for some users - which I presume to be a Pandoc issue), but you are welcome to try it out yourself by commenting out the following section in your Rmd file.
-
-
-<!-- :::::: {.columns data-latex="[T]"} -->
-<!-- ::: {.column data-latex="{0.7\textwidth}"} -->
-<!-- ```{r, echo=FALSE, fig.width=4, fig.height=4} -->
-<!-- par(mar = c(4, 4, .2, .1)) -->
-<!-- plot(cars, pch = 19) -->
-<!-- ``` -->
-<!-- ::: -->
-<!-- ::: {.column data-latex="{0.05\textwidth}"} -->
-<!-- \ -->
-<!-- ::: -->
-<!-- ::: {.column data-latex="{0.2\textwidth}"} -->
-<!-- \scriptsize -->
-
-<!-- ## Data {-} -->
-<!-- The figure on the left-hand side shows the `cars` data. -->
-
-<!-- Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do -->
-<!-- eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut -->
-<!-- enim ad minim veniam, quis nostrud exercitation ullamco laboris -->
-<!-- nisi ut aliquip ex ea commodo consequat. -->
-<!-- ::: -->
-<!-- :::::: -->
 
 
 
@@ -206,45 +251,8 @@ You can also very easily split a page using built-in Pandoc formatting. I commen
 ## Subsection
 Ideally do not overuse subsections. It equates to bad writing.^[This is an example of a footnote by the way. Something that should also not be overused.]
 
-## Math section
-
-Equations should be written as such:
-
-\begin{align}
-\beta = \sum_{i = 1}^{\infty}\frac{\alpha^2}{\sigma_{t-1}^2} \label{eq1} \\
-\int_{x = 1}^{\infty}x_{i} = 1 \notag
-\end{align}
-
-If you would like to see the equations as you type in Rmarkdown, use $ symbols instead (see this for yourself by adjusted the equation):
-
-$$
-\beta = \sum_{i = 1}^{\infty}\frac{\alpha^2}{\sigma_{t-1}^2} \\
-\int_{x = 1}^{\infty}x_{i} = 1
-$$
-
-Note again the reference to equation \ref{eq1}. Writing nice math requires practice. Note I used a forward slashes to make a space in the equations. I can also align equations using  __\&__, and set to numbering only the first line. Now I will have to type ``begin equation'' which is a native \LaTeX command. Here follows a more complicated equation:
 
 
-\begin{align}
-	y_t &= c + B(L) y_{t-1} + e_t   \label{eq2}    \\ \notag
-	e_t &= H_t^{1/2}  z_t ; \quad z_t \sim  N(0,I_N) \quad \& \quad H_t = D_tR_tD_t \\ \notag
-		D_t^2 &= {\sigma_{1,t}, \dots, \sigma_{N,t}}   \\ \notag
-		\sigma_{i,t}^2 &= \gamma_i+\kappa_{i,t}  v_{i, t-1}^2 +\eta_i  \sigma_{i, t-1}^2, \quad \forall i \\ \notag
-		R_{t, i, j} &= {diag(Q_{t, i, j}}^{-1}) . Q_{t, i, j} . diag(Q_{t, i, j}^{-1})  \\ \notag
-		Q_{t, i, j} &= (1-\alpha-\beta)  \bar{Q} + \alpha  z_t  z_t'  + \beta  Q_{t, i, j} \notag
-\end{align}
-
-Note that in \ref{eq2} I have aligned the equations by the equal signs. I also want only one tag, and I create spaces using ``quads''.
-
-See if you can figure out how to do complex math using the two examples provided in \ref{eq1} and \ref{eq2}.
-
-<!-- $$ -->
-<!-- This is a commented out section in the writing part. -->
-<!-- Comments are created by highlighting text, amnd pressing CTL+C -->
-<!-- \\begin{align} -->
-<!-- \\beta = \\alpha^2 -->
-<!-- \end{align} -->
-<!-- $$ -->
 
 # Results
 
@@ -322,7 +330,7 @@ If you are eager to use huxtable, comment out the Huxtable table in the Rmd temp
 Note that I do not include this in the ordinary template, as some latex users have complained it breaks when they build their Rmds (especially those using tidytex - I don't have this problem as I have the full Miktex installed on mine). Up to you, but I strongly recommend installing the package manually and using huxtable. To make this work, uncomment the _Adding additional latex packages_ part in yaml at the top of the Rmd file. Then comment out the huxtable example in the template below this line. Reknit, and enjoy.
 
 ```{r, results = 'asis'}
-
+list.files('code/', full.names = T, recursive = T) %>% as.list() %>% walk(~source(.))
 if(!require(huxtable)) install.packages(huxtable)
 library(huxtable)
 data(diamonds, package = 'ggplot2')
