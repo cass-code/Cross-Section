@@ -11,12 +11,12 @@ documentclass: "elsarticle"
 # --------- Thesis title (Optional - set to FALSE by default).
 # You can move the details below around as you please.
 Thesis_FP: TRUE
-Entry1: "Investigating Instrument Variables: Income and Ability"
+Entry1: "LATE to the Party: Investigating Instrument Variables for Education"
 Entry2: "\\textbf{Cassandra Pengelly}" # textbf for bold
 Entry3: "20346212"
-Uni_Logo: Tex/Logo.png # Place a logo in the indicated location (from your root, e.g. defaults to ~/Tex/Logo.png) and uncomment this line. Leave uncommented for no image
-Logo_width: 0.3 # If using a logo - use this to set width (size) of image
-Entry4: "Econometrics 871: Cross Section Project"
+Uni_Logo: Tex/logo.jpeg # Place a logo in the indicated location (from your root, e.g. defaults to ~/Tex/Logo.png) and uncomment this line. Leave uncommented for no image
+Logo_width: 1 # If using a logo - use this to set width (size) of image
+Entry4: "\\textbf{Econometrics 871: Cross Section Project}"
 Entry5: "Stellenbosch University"
 Entry6: July 2021
 # Entry7:
@@ -75,7 +75,7 @@ csl: Tex/harvard-stellenbosch-university.csl # referencing format used.
 # ---------- General:
 RemovePreprintSubmittedTo: TRUE  # Removes the 'preprint submitted to...' at bottom of titlepage
 Journal: "Journal of Finance"   # Journal that the paper will be submitting to, if RemovePreprintSubmittedTo is set to TRUE.
-toc: FALSE                       # Add a table of contents
+toc: TRUE                       # Add a table of contents
 numbersections: TRUE             # Should sections (and thus figures and tables) be numbered?
 fontsize: 11pt                  # Set fontsize
 linestretch: 1.2                # Set distance between lines.
@@ -91,8 +91,8 @@ output:
     template: Tex/TexDefault.txt
     fig_width: 3.5 # Adjust default figure sizes. This can also be done in the chunks of the text.
     fig_height: 3.5
-abstract: |
-  Abstract to be written here. The abstract should not be too long and should provide the reader with a good understanding what you are writing about. Academic papers are not like novels where you keep the reader in suspense. To be effective in getting others to read your paper, be as open and concise about your findings here as possible. Ideally, upon reading your abstract, the reader should feel he / she must read your paper in entirety.
+# abstract: |
+#   Abstract to be written here. The abstract should not be too long and should provide the reader with a good understanding what you are writing about. Academic papers are not like novels where you keep the reader in suspense. To be effective in getting others to read your paper, be as open and concise about your findings here as possible. Ideally, upon reading your abstract, the reader should feel he / she must read your paper in entirety.
 ---
 
 <!-- First: Set your default preferences for chunk options: -->
@@ -101,18 +101,9 @@ abstract: |
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = FALSE, message = FALSE, warning = FALSE, fig.width = 6, fig.height = 5, fig.pos="H", fig.pos = 'H')
-# Note: echo = FALSE implies the code is executed, but not printed in your pdf.
-# warning and message = FALSE implies ugly messages and warnings are removed from your pdf.
-# These should be picked up when you execute the command chunks (code sections below) in your rmd, not printed in your paper!
-
-# Lets load in example data, and see how this can be stored and later called from your 'data' folder.
 if(!require("tidyverse")) install.packages("tidyverse")
 library(tidyverse)
-
-
-# Notice that as you are working in a .Rproj file (I am assuming you are) - the relative paths of your directories start at your specified root.
-# This means that when working in a .Rproj file, you never need to use getwd() - it is assumed as your base root automatically.
-
+data <- read_dta("data/Adult_W5_Anon_V1.0.0.dta")
 
 ```
 
@@ -120,12 +111,30 @@ library(tidyverse)
 <!-- ############################## -->
 <!-- # Start Writing here: -->
 <!-- ############################## -->
+\newpage
 
 # Introduction \label{Introduction}
 
+This paper estimates the return to education using two alternative instrumental variable
+estimators: one exploits variation in schooling associated with early smoking behaviour, the
+other uses the raising of the minimum school leaving age. Each instrument estimates a ‘local
+average treatment effect’ and my motivation is to analyse the extent to which these differ and
+which is more appropriate for drawing conclusions about the return to education in Britain. I
+implement each instrument on the same data from the British Household Panel Survey, and
+use the over-identification to test the validity of my instruments. I find that the instrument
+constructed using early smoking behaviour is valid as well as being strong, and argue that it
+provides a better estimate of the average effect of additional education, akin to ordinary least
+squares but corrected for endogeneity. I also exploit the dual sources of exogenous variation
+in schooling to derive a further IV estimate of the return to schooling. I find the OLS estimate
+to be considerably downward biased (around 4.6%) compared with the IV estimates of 12.9%
+(early smoking), 10.2% (RoSLA) and 12.5% (both instruments). 
+
+
+This essay^[This essay was written in R using the Texevier package by @Texevier] is structured as follows: section \ref{data} details the data set used and discusses the descriptive statistics. Section \ref{meth} outlines the methodology and argues that the LATE assumptions for the instrumental variables hold. Following this, section \ref{results} presents the regression results and evaluates the robustness of the estimators used to obtain a causal effect. The final section, \ref{conclusion], concludes.
+
+@disc
 You may suggest any application using one or a combination of techniques that we have learnt
-in this course.
-You should NOT write an extensive essay about the topic of interest, nor should you conduct
+in this course. You should NOT write an extensive essay about the topic of interest, nor should you conduct
 an extensive literature review behind it: you should only reference articles that support the
 motivation for your econometric strategy (in the quest of finding a causal interpretation of a
 relationship that you are modeling).
@@ -133,101 +142,160 @@ Provide descriptive statistics and graphs to aid in your discussion.
 The assignment should be between 3-6 pages, including your tables and figures.
 
 You are required to go beyond simply estimating and presenting your results, but to convince
-the reader of their robustness by presenting alternative specifications. You should apply
-different estimators and specifications where possible.
-Discuss the shortcomings of the estimators in obtaining a causal effect and argue why your
+the reader of their robustness by presenting alternative specifications. You should apply different estimators and specifications where possible. Discuss the shortcomings of the estimators in obtaining a causal effect and argue why your
 strategy is the best available to obtain a causal effect that satisfies relevant assumptions.
 
-Determine an effect of interest and find instrumental variables to estimate it
-causally. If possible, use more than one instrument. Given the LATE
-assumptions, try and explain why your results differ and which is likely to
-represent the causal effect you are looking for. Conduct sufficient specification
-tests to establish whether you are overidentifying your instrument set or whether
-the IVs shift the estimates enough to indicate that OLS would be inconsistent.
-
-
-Writing in Rmarkdown is surprizingly easy - see [this website](https://www.rstudio.com/wp-content/uploads/2015/03/rmarkdown-reference.pdf) cheatsheet for a summary on writing Rmd writing tips.
+Determine an effect of interest and find instrumental variables to estimate it causally. If possible, use more than one instrument. Given the LATE assumptions, try and explain why your results differ and which is likely to
+represent the causal effect you are looking for. Conduct sufficient specification tests to establish whether you are overidentifying your instrument set or whether the IVs shift the estimates enough to indicate that OLS would be inconsistent.
 
 # Data \label{data}
 
 mention survey design for NIDS
+@isco for occupation classification
 
-# Methodology \label{meth}
-This project makes use of 4 different instrument variables: fathers occupation, mothers occupation, mothers education and fathers education
+```{r lineargraph,  warning =  FALSE, fig.align = 'center', fig.cap = "Income and Education Relationship \\label{Figure1}", fig.ext = 'png', fig.height = 3, fig.width = 6}
 
-# Results \label{results}
-
-```{r, results = 'asis'}
 library(haven)
-library(ivreg)
-install.packages("modelsummary")
-list.files('code/', full.names = T, recursive = T) %>% as.list() %>% walk(~source(.))
 data <- read_dta("data/Adult_W5_Anon_V1.0.0.dta")
-df1 <- reg1_clean(data)
-
-
-df2 <- reg2_clean(data)
-lm1 <-lm(income ~ age+ age2+ school+tertiary, dfiv)
-lm2 <-lm(income ~ age+ age2+ school+tertiary + race + gender, df2)
-summary(lm2)
-
-dfiv <- iv1_clean(data)
-iv1 <- ivreg(income ~ age + age2 | school + tertiary |
-  father_schl + father_tert, data = dfiv)
-summary(iv)
-
-
-if(!require(huxtable)) install.packages(huxtable)
-library(huxtable)
-data(df, package = 'ggplot2')
-Title <- "Regression Output"
-Label <- "Reg01"
-lm1 <- lm(income ~ age)
-#lm2 <- lm(price ~ depth, diamonds)
-lm3 <- lm(price ~ carat + depth, diamonds)
-htab <-
-huxreg(lm1, iv1,
-                statistics = c(N = "nobs", R2 = "r.squared"),
-                note = "%stars%.") %>%
-  set_caption(Title) %>%
-  set_label(Label)
-font_size(htab) <- 12
-
-# Now simply call the table:
-htab
-
-```
-
-
-
-<!-- The following is a code chunk. It must have its own unique name (after the r), or no name. After the comma follows commands for R which are self-explanatory. By default, the code and messages will not be printed in your pdf, just the output: -->
-
-```{r Income,  warning =  FALSE, fig.align = 'center', fig.cap = "Income and Education Relationship \\label{Figure1}", fig.ext = 'png', fig.height = 3, fig.width = 6}
-
-  # This is just a random plot to show you a plot. This is done if the getwd() does not point to your Template's directory.
-  # Set WD below to your project's working directory.
 list.files('code/', full.names = T, recursive = T) %>% as.list() %>% walk(~source(.))
 dfplot <- plot_eduInc(data) 
 
 library(ggplot2)
   g <-
-  ggplot(data = dfplot,aes(x = education, y = income)) +
+  ggplot(data = dfplot,aes(x = education, y = income, color=race)) +
   geom_point() +
     stat_smooth(method = "lm",
-        col = "#C42126",
+        col = "#000000",
         se = FALSE,
         size = 1) +
-  theme_bw() +
+  theme_minimal()+
   # theme(legend.position = "none") +
-  theme(plot.title = element_text(size = 10)) +
-  theme(axis.title = element_text(size = 10),
-        axis.title.x = element_text()) +
-  labs(y = "Income", x = "Education", title = "Income and Education Relationship")
+ xlab("Education") +
+  ylab("Income") +
+    ggtitle("Plot of Income and Education")
 
 g
 
 ```
 
+```{r racegraph,  warning =  FALSE, fig.align = 'center', fig.cap = "Income and Education Relationship \\label{Figure1}", fig.ext = 'png', fig.height = 3, fig.width = 6}
+
+library(haven)
+data <- read_dta("data/Adult_W5_Anon_V1.0.0.dta")
+list.files('code/', full.names = T, recursive = T) %>% as.list() %>% walk(~source(.))
+dfplot <- plot_race(data)  
+
+
+library(ggplot2)
+g <- ggplot(dfplot) +
+    geom_bar(aes(x = race, stat="identity", width=0.7, fill = race)) +
+  theme_minimal() +
+    xlab("Race") +
+  ylab("People") +
+  ggtitle("Race Proportions")
+g
+
+```
+  
+# Methodology \label{meth}
+This project makes use of 4 different instrument variables: fathers occupation, mothers occupation, mothers education and fathers education
+
+# Results \label{results}
+
+## Specification Tests
+```{r regression1,  warning =  FALSE, fig.align = 'center', fig.cap = "Regressions: Father Education Instrument \\label{reg1}", fig.ext = 'png', fig.height = 3, fig.width = 6, results = 'asis'}
+library(haven)
+library(ivreg)
+
+list.files('code/', full.names = T, recursive = T) %>% as.list() %>% walk(~source(.))
+data <- read_dta("data/Adult_W5_Anon_V1.0.0.dta")
+#w4 <- read_dta("data/Adult_W4_Anon_V2.0.0.dta")
+
+dfiv <- iv1_clean(data)
+lm1 <-lm(income ~ age+ age2+ school + tertiary, dfiv)
+lm2 <-lm(income ~ age+ age2+ school+tertiary + race + gender, dfiv)
+
+iv1 <- ivreg(income ~ age + age2 | school + tertiary | father_schl + father_tert, data = dfiv)
+iv2 <- ivreg(income ~ age + age2 + race + gender| school + tertiary | father_schl + father_tert, data = dfiv)
+
+library(huxtable)
+Title <- "Regressions: Father Education Instrument"
+Label <- "reg1"
+htab <-
+huxreg("OLS 1" = lm1, "2SLS 1" = iv1, "OLS 2" = lm2,  "2SLS 2" = iv2,
+                statistics = c(N = "nobs", R2 = "r.squared"),
+                note = "%stars%.") %>%
+  set_caption(Title) %>%
+  set_label(Label)
+font_size(htab) <- 12
+htab
+
+```
+
+```{r regression2,  warning =  FALSE, fig.align = 'center', fig.cap = "Regressions: Mother Education Instrument \\label{reg2}", fig.ext = 'png', fig.height = 3, fig.width = 6, results = 'asis'}
+library(haven)
+library(ivreg)
+
+list.files('code/', full.names = T, recursive = T) %>% as.list() %>% walk(~source(.))
+data <- read_dta("data/Adult_W5_Anon_V1.0.0.dta")
+
+dfiv <- iv_mother(data)
+# lm1 <-lm(income ~ age+ age2+ school + tertiary, dfiv)
+# lm2 <-lm(income ~ age+ age2+ school+tertiary + race + gender, dfiv)
+lm1 <-lm(income ~ age+ age2+ education, dfiv)
+lm2 <-lm(income ~ age+ age2+ education + race + gender, dfiv)
+
+#iv1 <- ivreg(income ~ age + age2 | school + tertiary | mother_schl + mother_tert, data = dfiv)
+iv1 <- ivreg(income ~ age + age2 | education | mother_ed, data = dfiv)
+iv2 <- ivreg(income ~ age + age2 + race + gender| education | mother_ed, data = dfiv)
+#iv2 <- ivreg(income ~ age + age2 + race + gender| school + tertiary | mother_schl + mother_tert, data = dfiv)
+
+library(huxtable)
+Title <- "Regressions: Mother Education Instrument"
+Label <- "reg2"
+htab <-
+huxreg("OLS 1" = lm1, "2SLS 1" = iv1, "OLS 2" = lm2, "2SLS 2" = iv2,
+                statistics = c(N = "nobs", R2 = "r.squared"),
+                note = "%stars%.") %>%
+  set_caption(Title) %>%
+  set_label(Label)
+font_size(htab) <- 12
+htab
+
+```
+
+
+```{r regression3,  warning =  FALSE, fig.align = 'center', fig.cap = "Regressions: Mother Occupation Instrument \\label{reg3}", fig.ext = 'png', fig.height = 3, fig.width = 6, results = 'asis'}
+library(haven)
+library(ivreg)
+
+list.files('code/', full.names = T, recursive = T) %>% as.list() %>% walk(~source(.))
+data <- read_dta("data/Adult_W5_Anon_V1.0.0.dta")
+
+dfiv <- mother_occ(data)
+# lm1 <-lm(income ~ age+ age2+ school + tertiary, dfiv)
+# lm2 <-lm(income ~ age+ age2+ school+tertiary + race + gender, dfiv)
+lm1 <-lm(income ~ age+ age2+ education, dfiv)
+lm2 <-lm(income ~ age+ age2+ education + race + gender, dfiv)
+
+#iv1 <- ivreg(income ~ age + age2 | school + tertiary | mother_schl + mother_tert, data = dfiv)
+iv1 <- ivreg(income ~ age + age2 | education | mother_occ, data = dfiv)
+iv2 <- ivreg(income ~ age + age2 + race + gender| education | mother_occ, data = dfiv)
+#iv2 <- ivreg(income ~ age + age2 + race + gender| school + tertiary | mother_schl + mother_tert, data = dfiv)
+
+library(huxtable)
+Title <- "Regressions: Mother's Occupation as Instrument"
+Label <- "reg3"
+htab <-
+huxreg("OLS 1" = lm1, "2SLS 1" = iv1, "OLS 2" = lm2, "2SLS 2" = iv2,
+                statistics = c(N = "nobs", R2 = "r.squared"),
+                note = "%stars%.") %>%
+  set_caption(Title) %>%
+  set_label(Label)
+font_size(htab) <- 12
+htab
+
+```
 
 
 ```{r Figure2, include = FALSE, warning =  FALSE, fig.align = 'center', fig.cap = "Caption Here \\label{Figure2}", fig.height = 3, fig.width = 6, dev = 'png'}
@@ -238,76 +306,57 @@ g
 
 To reference the plot above, add a ``\\label'' after the caption in the chunk heading, as done above. Then reference the plot as such: As can be seen, Figures \ref{Figure1}  and \ref{Figure2} are excellent, with Figure \ref{Figure2} being particularly aesthetically pleasing due to its device setting of Tikz. The nice thing now is that it correctly numbers all your figures (and sections or tables) and will update if it moves. The links are also dynamic.
 
-I very strongly suggest using ggplot2 (ideally in combination with dplyr) using the ggtheme package to change the themes of your figures.
-
-
-# Splitting a page
-
-
-
-
-#  Methodology \label{Meth}
-
-## Subsection
-Ideally do not overuse subsections. It equates to bad writing.^[This is an example of a footnote by the way. Something that should also not be overused.]
-
-
 
 
 # Results
 
-Tables can be included as follows. Use the _xtable_ (or kable) package for tables. Table placement = H implies Latex tries to place the table Here, and not on a new page (there are, however, very many ways to skin this cat. Luckily there are many forums online!).
 
 
 ```{r ShortTable, results = 'asis'}
 
-library(xtable)
-data <- mtcars[1:5,] %>% tibble::as_tibble()
-
-table <- xtable(data, caption = "Short Table Example \\label{tab1}")
-  print.xtable(table,
-             # tabular.environment = "longtable",
-             floating = TRUE,
-             table.placement = 'H',
-             # scalebox = 0.3,
-             comment = FALSE,
-             caption.placement = 'bottom'
-             )
+# library(xtable)
+# data <- mtcars[1:5,] %>% tibble::as_tibble()
+# 
+# table <- xtable(data, caption = "Short Table Example \\label{tab1}")
+#   print.xtable(table,
+#              # tabular.environment = "longtable",
+#              floating = TRUE,
+#              table.placement = 'H',
+#              # scalebox = 0.3,
+#              comment = FALSE,
+#              caption.placement = 'bottom'
+#              )
 
 ```
 
-To reference calculations __in text__, _do this:_ From table \ref{tab1} we see the average value of mpg is `r mean(mtcars[1:5,]$mpg)`.
-
-Including tables that span across pages, use the following (note that I add below the table: ``continue on the next page''). This is a neat way of splitting your table across a page.
-
-Use the following default settings to build your own possibly long tables. Note that the following will fit on one page if it can, but cleanly spreads over multiple pages:
+wn possibly long tables. Note that the following will fit on one page if it can, but cleanly spreads over multiple pages:
 
 ```{r LongTable, results = 'asis'}
-
-library(xtable)
-
-data = mtcars %>% tibble::as_tibble()
-  addtorow          <- list()
-  addtorow$pos      <- list()
-  addtorow$pos[[1]] <- c(0)
-  addtorow$command  <- c(paste("\\hline \n",
-                               "\\endhead \n",
-                               "\\hline \n",
-                               "{\\footnotesize Continued on next page} \n",
-                               "\\endfoot \n",
-                               "\\endlastfoot \n",sep=""))
-table <- xtable(data, caption = "Long Table Example")
-  print.xtable(table,
-             tabular.environment = "longtable",
-             floating = FALSE, # Leave this as is.
-             table.placement = 'H', # Leave this as is.
-             booktabs = T, # Aesthetics
-             include.rownames = FALSE,  # Typically you don't want this in a table.
-             add.to.row = addtorow, # For adding the Continued on next page part...
-             comment = FALSE,
-             caption.placement = 'top',  # Where do you want the caption?
-             size="\\fontsize{12pt}{13pt}\\selectfont"  # Size of text in table..
-             )
+# 
+# library(xtable)
+# 
+# data = mtcars %>% tibble::as_tibble()
+#   addtorow          <- list()
+#   addtorow$pos      <- list()
+#   addtorow$pos[[1]] <- c(0)
+#   addtorow$command  <- c(paste("\\hline \n",
+#                                "\\endhead \n",
+#                                "\\hline \n",
+#                                "{\\footnotesize Continued on next page} \n",
+#                                "\\endfoot \n",
+#                                "\\endlastfoot \n",sep=""))
+# table <- xtable(data, caption = "Long Table Example")
+#   print.xtable(table,
+#              tabular.environment = "longtable",
+#              floating = FALSE, # Leave this as is.
+#              table.placement = 'H', # Leave this as is.
+#              booktabs = T, # Aesthetics
+#              include.rownames = FALSE,  # Typically you don't want this in a table.
+#              add.to.row = addtorow, # For adding the Continued on next page part...
+#              comment = FALSE,
+#              caption.placement = 'top',  # Where do you want the caption?
+#              size="\\fontsize{12pt}{13pt}\\selectfont"  # Size of text in table..
+#              )
 # See https://cran.r-project.org/web/packages/xtable/vignettes/xtableGallery.pdf for table inspiration
 ```
 
@@ -316,65 +365,14 @@ table <- xtable(data, caption = "Long Table Example")
 <!-- hfill can be used to create a space, like here between text and table. -->
 
 
-## Huxtable
+# Conclusion \label{conclusion}
 
-Huxtable is a very nice package for making working with tables between Rmarkdown and Tex easier.
+\begin{figure}[htbp]
+\centering
+\includegraphics{Tex/conclusion.jpg}
+\caption{\label{con}}
+\end{figure}
 
-This cost some adjustment to the Tex templates to make it work, but it now works nicely.
-
-See documentation for this package [here](https://hughjonesd.github.io/huxtable/huxtable.html). A particularly nice addition of this package is for making the printing of regression results a joy (see [here](https://hughjonesd.github.io/huxtable/huxtable.html#creating-a-regression-table)). Here follows an example:
-
-
-If you are eager to use huxtable, comment out the Huxtable table in the Rmd template, and uncomment the colortbl package in your Rmd's root.
-
-Note that I do not include this in the ordinary template, as some latex users have complained it breaks when they build their Rmds (especially those using tidytex - I don't have this problem as I have the full Miktex installed on mine). Up to you, but I strongly recommend installing the package manually and using huxtable. To make this work, uncomment the _Adding additional latex packages_ part in yaml at the top of the Rmd file. Then comment out the huxtable example in the template below this line. Reknit, and enjoy.
-
-```{r, results = 'asis'}
-list.files('code/', full.names = T, recursive = T) %>% as.list() %>% walk(~source(.))
-if(!require(huxtable)) install.packages(huxtable)
-library(huxtable)
-data(diamonds, package = 'ggplot2')
-Title <- "Regression Output"
-Label <- "Reg01"
-lm1 <- lm(price ~ carat, diamonds)
-lm2 <- lm(price ~ depth, diamonds)
-lm3 <- lm(price ~ carat + depth, diamonds)
-htab <-
-huxreg(lm1, lm2, lm3,
-                statistics = c(N = "nobs", R2 = "r.squared"),
-                note = "%stars%.") %>%
-  set_caption(Title) %>%
-  set_label(Label)
-# More settings:
-font_size(htab) <- 12
-# Let's change regression names: this is slightly hacky, but works. Comment out this section to see what the default looks like:
-  Names <- c( "Reg1", "Reg2", "Reg3")
-  for(i in 1:length(Names)) {
-    htab[1,][[1+i]] <- Names[i]
-  }
-# Now simply call the table:
-htab
-
-```
-
-FYI - R also recently introduced the gt package, which is worthwhile exploring too.
-
-# Lists
-
-To add lists, simply using the following notation
-
-* This is really simple
-
-    + Just note the spaces here - writing in R you have to sometimes be pedantic about spaces...
-
-* Note that Rmarkdown notation removes the pain of defining \LaTeX environments!
-
-# Conclusion
-
-I hope you find this template useful. Remember, stackoverflow is your friend - use it to find answers to questions. Feel free to write me a mail if you have any questions regarding the use of this package. To cite this package, simply type citation("Texevier") in Rstudio to get the citation for @Texevier (Note that uncited references in your bibtex file will not be included in References).
-
-<!-- Make title of bibliography here: -->
-<!-- \newpage -->
 
 \newpage
 
