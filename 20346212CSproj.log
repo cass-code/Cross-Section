@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.23 (TeX Live 2021/W32TeX) (preloaded format=pdflatex 2021.7.14)  16 JUL 2021 15:32
+This is pdfTeX, Version 3.141592653-2.6-1.40.23 (TeX Live 2021/W32TeX) (preloaded format=pdflatex 2021.7.14)  16 JUL 2021 17:36
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -839,6 +839,15 @@ File: tc-pdftex.def 2019/01/04 v2.2 Clipping driver for pdftex
 LaTeX Warning: Label `data' multiply defined.
 
 
+LaTeX Warning: Label `tab:Specification' multiply defined.
+
+
+LaTeX Warning: Label `tab:Specification' multiply defined.
+
+
+LaTeX Warning: Label `tab:Specification' multiply defined.
+
+
 LaTeX Warning: Label `results' multiply defined.
 
 
@@ -938,7 +947,7 @@ Package caption Info: Begin \AtBeginDocument code.
 Package caption Info: threeparttable package is loaded.
 Package caption Info: wrapfig package is loaded.
 Package caption Info: End \AtBeginDocument code.
-<Tex/logo.jpeg, id=44, 308.352pt x 148.6353pt>
+<Tex/logo.jpeg, id=48, 308.352pt x 148.6353pt>
 File: Tex/logo.jpeg Graphic file (type jpg)
 <use Tex/logo.jpeg>
 Package pdftex.def Info: Tex/logo.jpeg  used on input line 206.
@@ -998,7 +1007,7 @@ LaTeX Font Info:    External font `lmex10' loaded for size
 LaTeX Font Info:    External font `lmex10' loaded for size
 (Font)              <5> on input line 308.
 [3]
-<20346212CSproj_files/figure-latex/lineargraph-1.png, id=119, 361.35pt x 158.59
+<20346212CSproj_files/figure-latex/lineargraph-1.png, id=124, 361.35pt x 158.59
 25pt>
 File: 20346212CSproj_files/figure-latex/lineargraph-1.png Graphic file (type pn
 g)
@@ -1007,7 +1016,7 @@ Package pdftex.def Info: 20346212CSproj_files/figure-latex/lineargraph-1.png  u
 sed on input line 397.
 (pdftex.def)             Requested size: 361.34912pt x 158.59209pt.
 [4]
-<20346212CSproj_files/figure-latex/racegraph-1.png, id=130, 361.35pt x 158.5925
+<20346212CSproj_files/figure-latex/racegraph-1.png, id=135, 361.35pt x 158.5925
 pt>
 File: 20346212CSproj_files/figure-latex/racegraph-1.png Graphic file (type png)
 
@@ -1015,7 +1024,7 @@ File: 20346212CSproj_files/figure-latex/racegraph-1.png Graphic file (type png)
 Package pdftex.def Info: 20346212CSproj_files/figure-latex/racegraph-1.png  use
 d on input line 406.
 (pdftex.def)             Requested size: 361.34912pt x 158.59209pt.
-<20346212CSproj_files/figure-latex/incomergraph-1.png, id=131, 361.35pt x 158.5
+<20346212CSproj_files/figure-latex/incomergraph-1.png, id=136, 361.35pt x 158.5
 925pt>
 File: 20346212CSproj_files/figure-latex/incomergraph-1.png Graphic file (type p
 ng)
@@ -1025,35 +1034,44 @@ used on input line 415.
 (pdftex.def)             Requested size: 361.34912pt x 158.59209pt.
 [5 <./20346212CSproj_files/figure-latex/lineargraph-1.png> <./20346212CSproj_fi
 les/figure-latex/racegraph-1.png> <./20346212CSproj_files/figure-latex/incomerg
-raph-1.png>] [6]
-LaTeX Font Info:    Calculating math sizes for size <11> on input line 567.
+raph-1.png>] [6] [7]
+LaTeX Font Info:    Calculating math sizes for size <11> on input line 658.
 LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <11> on input line 567.
+(Font)              <11> on input line 658.
 LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <7.69997> on input line 567.
+(Font)              <7.69997> on input line 658.
 LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <5.5> on input line 567.
-LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <14> on input line 811.
-LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <10> on input line 811.
-[7] [8] [9] [10]
+(Font)              <5.5> on input line 658.
+
+LaTeX Warning: Reference `plot' on page 8 undefined on input line 688.
+
+[8]
+<20346212CSproj_files/figure-latex/plot-1.png, id=212, 433.62pt x 216.81pt>
+File: 20346212CSproj_files/figure-latex/plot-1.png Graphic file (type png)
+<use 20346212CSproj_files/figure-latex/plot-1.png>
+Package pdftex.def Info: 20346212CSproj_files/figure-latex/plot-1.png  used on 
+input line 908.
+(pdftex.def)             Requested size: 433.61894pt x 216.80946pt.
+[9] [10 <./20346212CSproj_files/figure-latex/plot-1.png>] [11] [12]
 No file 20346212CSproj.bbl.
-[11] (./20346212CSproj.aux)
+[13] (./20346212CSproj.aux)
+
+LaTeX Warning: There were undefined references.
+
 
 LaTeX Warning: There were multiply-defined labels.
 
 Package rerunfilecheck Info: File `20346212CSproj.out' has not changed.
-(rerunfilecheck)             Checksum: A8FD591413255824189B6B94307F1904;1029.
+(rerunfilecheck)             Checksum: E9F1A5A5A8D46306C2411B2910B9C645;1186.
  ) 
 Here is how much of TeX's memory you used:
- 17888 strings out of 480502
- 310956 string characters out of 5897745
- 633186 words of memory out of 5000000
- 35172 multiletter control sequences out of 15000+600000
- 488692 words of font info for 94 fonts, out of 8000000 for 9000
+ 17906 strings out of 480502
+ 311487 string characters out of 5897745
+ 634841 words of memory out of 5000000
+ 35180 multiletter control sequences out of 15000+600000
+ 480662 words of font info for 84 fonts, out of 8000000 for 9000
  14 hyphenation exceptions out of 8191
- 72i,15n,80p,284b,765s stack positions out of 5000i,500n,10000p,200000b,80000s
+ 72i,15n,80p,284b,831s stack positions out of 5000i,500n,10000p,200000b,80000s
 {c:/Users/Cassandra/AppData/Roaming/TinyTeX/texmf-dist/fonts/enc/dvips/lm/lm-
 mathit.enc}{c:/Users/Cassandra/AppData/Roaming/TinyTeX/texmf-dist/fonts/enc/dvi
 ps/lm/lm-mathsy.enc}{c:/Users/Cassandra/AppData/Roaming/TinyTeX/texmf-dist/font
@@ -1073,10 +1091,10 @@ t/fonts/type1/public/lm/lmr8.pfb><c:/Users/Cassandra/AppData/Roaming/TinyTeX/te
 xmf-dist/fonts/type1/public/lm/lmr9.pfb><c:/Users/Cassandra/AppData/Roaming/Tin
 yTeX/texmf-dist/fonts/type1/public/lm/lmri10.pfb><c:/Users/Cassandra/AppData/Ro
 aming/TinyTeX/texmf-dist/fonts/type1/public/lm/lmsy10.pfb>
-Output written on 20346212CSproj.pdf (11 pages, 583255 bytes).
+Output written on 20346212CSproj.pdf (13 pages, 594414 bytes).
 PDF statistics:
- 303 PDF objects out of 1000 (max. 8388607)
- 252 compressed objects within 3 object streams
- 57 named destinations out of 1000 (max. 500000)
- 101 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 335 PDF objects out of 1000 (max. 8388607)
+ 280 compressed objects within 3 object streams
+ 66 named destinations out of 1000 (max. 500000)
+ 114 words of extra memory for PDF output out of 10000 (max. 10000000)
 

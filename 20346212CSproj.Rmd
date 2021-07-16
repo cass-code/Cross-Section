@@ -202,7 +202,49 @@ Log(income)=\beta_{0}+\beta_{1} X_{1}+\cdots+\beta_{k} X_{k}+u  \label{eq1}
 \end{align}
 where $X_{1}$ is education and $\ldots, X_{k}$ includes the other regressors: age, age-squared, race and gender, $\beta_{0}, \ldots, \beta_{k}$ are the regression coefficients, and $u$ is the error term. Race is a categorical variable with the reference group as African, and gender is a dummy variable that takes a value of 1 if an individual is male and 0 otherwise.
 
-If education is an endogenous regressor - i.e. correlated with the error term - then the OLS coefficient for education ($\beta_{1}$) will be biased. If we can find an instrumental variable for education, then we can remove this endogeneity and get an unbiased coefficient for education (@metrics & @metrics1). 4 different variables are used as an instrument for an individual's education: fathers education, mother's education, father's occupation and mother's occupation. In order to use these variables as instruments, we have to check their validity(@ang). Economic theory and the literature suggests that returns to schooling are heterogeneous (@return [p.827-828]), which implies that for the instruments to be valid they have to comply with the Local Average Treatment Effects (LATE) identifying assumptions. The four LATE assumptions are: independence, random assignment, exclusion restriction, and monotonicity. 
+If education is an endogenous regressor - i.e. correlated with the error term - then the OLS coefficient for education ($\beta_{1}$) will be biased (@R). If we can find an instrumental variable for education, then we can remove this endogeneity and get an unbiased coefficient for education (@metrics & @metrics1). 4 different variables are used as an instrument for an individual's education: fathers education, mother's education, father's occupation and mother's occupation. In order to use these variables as instruments, we have to check their validity(@ang). Economic theory and the literature suggests that returns to schooling are heterogeneous (@return [p.827-828]), which implies that for the instruments to be valid they have to comply with the Local Average Treatment Effects (LATE) identifying assumptions. The four LATE assumptions are: independence, random assignment, exclusion restriction, and monotonicity. The first section below, ref\{spec}, interprets the diagnostic tests for instrument variables and the second part, ref\{late}, evaluates whether the LATE assumptions hold for the instrument variables.
+ 
+## Specification Tests \label{spec}
+
+```{r Specification,  echo=FALSE, warning =  FALSE,message= FALSE, fig.align = 'center', fig.cap = "Specification Tests \\label{spec1}", fig.ext = 'png', fig.height = 3, fig.width = 6, results='asis'}
+library(ivreg)
+library(sandwich)
+library(kableExtra)
+
+list.files('code/', full.names = T, recursive = T) %>% as.list() %>% walk(~source(.))
+d1 <- iv_father(data)
+d2 <- iv_mother(data)
+d3 <- f_occ(data)
+d4 <- m_occ(data)
+
+lm1 <-lm(income ~ age+ age2+ education + race + gender, d1)
+
+iv1 <- ivreg(income ~ age + age2 + race + gender| education | father_ed, data = d1)
+iv2 <- ivreg(income ~ age + age2 + race + gender| education | mother_ed, data = d2)
+iv3 <- ivreg(income ~ age + age2 + race + gender| education | father_occ, data = d3)
+iv4 <- ivreg(income ~ age + age2 + race + gender| education | mother_occ, data = d4)
+
+tab1 <- summary(iv1, vcov = sandwich, diagnostics = TRUE) 
+kab1<- kable(tab1$diagnostics, caption = "Specification Tests for Father's Education \\label{FE}")
+
+tab2 <- summary(iv2, vcov = sandwich, diagnostics = TRUE)
+kab2 <- kable(tab2$diagnostics, caption = "Specification Tests for Mother's Education \\label{ME}")
+
+tab3 <- summary(iv3, vcov = sandwich, diagnostics = TRUE) 
+kab3<- kable(tab3$diagnostics, caption = "Specification Tests for Father's Occupation \\label{FO}")
+
+tab4 <- summary(iv4, vcov = sandwich, diagnostics = TRUE)
+kab4 <- kable(tab4$diagnostics, caption = "Specification Tests for Mother's Occupation \\label{MO}")
+
+kab1 
+kab2
+kab3 
+kab4 
+
+```
+
+## LATE Assumptions \label{late}
+
 
 If our instrument is:
 1. randomly assigned
@@ -220,12 +262,12 @@ Draft eligible men were allowed to defer their military service if they wanted t
 If some men decided to get more schooling because they had low lottery numbers and did not want to serve in the military, then this could have affected earnings via education attainment rather than via military service.
 
 Monotonicity:
-It seemse unlikely that someone who would have pursued education further would decide not to because either of his/her parent pursued education further. Thus it's reasonable to conclude that the monotonicity assumption holds (i.e. there are no defiers).
+It seemse unlikely that someone who would have pursued education further would decide not to because either of his/her parent pursued education further. Thus, it's reasonable to conclude that the monotonicity assumption holds (i.e. there are no defiers). Similarly
 
 
 Is it possible that someone would have volunteered for the army (if draft ineligible) but decided not to because of draft eligibility? Seems unlikely.
 
-The relevance assumption is testable and table ref\{reg5} shows that both parents' education is correlated with education (and the coefficients are statistically significant at a 1% level). This means these instruments affect treatment for at least some individuals. The regression of education on parents' occuation shows that joint effect of the occupation types are significant. The p-values associated with the F-test for each regression are presented in \ref{tab}. The p-values are essentially 0 and thus reject the null hypothesis that the joint effect is zero. From an intuitive stand point, if an individual's parents pursued more years of education, 
+The relevance assumption is testable and table ref\{reg5} shows that both parents' education is correlated with education (and the coefficients are statistically significant at a 1% level). This means these instruments affect treatment for at least some individuals. The regression of education on parents' occupation shows that joint effect of the occupation types are significant. The p-values associated with the F-test for each regression are presented in \ref{tab}. The p-values are essentially 0 and thus reject the null hypothesis that the joint effect is zero. From an intuitive stand point, if an individual's parents pursued more years of education, 
 
 Are there individuals who would not have gone to war if they didn’t get picked, but ended up going just because they were eligible? Seems plausible. 
 
@@ -267,22 +309,16 @@ tab <-
 tab
 ```
 
-
-
-
-
-## Specification Tests
-
-
 # Results \label{results}
 
-```{r regression1,  echo=FALSE, warning =  FALSE,message= FALSE, fig.align = 'center', fig.cap = "Regressions with log(income) as the dependent variable \\label{reg1}", fig.ext = 'png', fig.height = 3, fig.width = 6, results='asis'}
+Table \ref{reg1} presents the regressions results and figure \ref{plot} plots the regression coefficients with their 95% confidence intervals. 
+
+
+```{r regression1,  echo=FALSE, warning =  FALSE, message= FALSE, fig.align = 'center', fig.cap = "Regressions with log(income) as the dependent variable \\label{reg1}", fig.ext = 'png', fig.height = 3, fig.width = 6}
 library(haven)
 library(ivreg)
 
 list.files('code/', full.names = T, recursive = T) %>% as.list() %>% walk(~source(.))
-#w4 <- read_dta("data/Adult_W4_Anon_V2.0.0.dta")
-
 d1 <- iv_father(data)
 d2 <- iv_mother(data)
 d3 <- f_occ(data)
@@ -296,7 +332,7 @@ iv3 <- ivreg(income ~ age + age2 + race + gender| education | father_occ, data =
 iv4 <- ivreg(income ~ age + age2 + race + gender| education | mother_occ, data = d4)
 
 library(huxtable)
-Title <- "Regressions: Father's Education as Instrument"
+Title <- "Regressions: OLS and 2SLS with Various Instruments"
 Label <- "reg1"
 htab <-
 huxreg("OLS" = lm1, "2SLS FE" = iv1, "2SLS ME" = iv2, "2SLS FO" = iv3, "2SLS MO" = iv4,
@@ -305,8 +341,35 @@ huxreg("OLS" = lm1, "2SLS FE" = iv1, "2SLS ME" = iv2, "2SLS FO" = iv3, "2SLS MO"
                 note = "%stars%.") %>%
   set_caption(Title) %>%
   set_label(Label)
-font_size(htab) <- 12
+font_size(htab) <- 11
 htab
+```
+
+
+```{r plot,  echo=FALSE, warning =  FALSE, message= FALSE, fig.align = 'center', fig.ext = 'png', fig.height = 3, fig.width = 6, results='asis'}
+library(haven)
+library(ivreg)
+
+list.files('code/', full.names = T, recursive = T) %>% as.list() %>% walk(~source(.))
+
+d1 <- iv_father(data)
+d2 <- iv_mother(data)
+d3 <- f_occ(data)
+d4 <- m_occ(data)
+
+lm1 <-lm(income ~ age+ age2+ education + race + gender, d1)
+
+iv1 <- ivreg(income ~ age + age2 + race + gender| education | father_ed, data = d1)
+iv2 <- ivreg(income ~ age + age2 + race + gender| education | mother_ed, data = d2)
+iv3 <- ivreg(income ~ age + age2 + race + gender| education | father_occ, data = d3)
+iv4 <- ivreg(income ~ age + age2 + race + gender| education | mother_occ, data = d4)
+
+
+library(modelsummary)
+list <- list(OLS = lm1, FE = iv1, ME=iv2, FO = iv3, MO = iv4)
+model_plot <- 
+  modelplot(list, coef_omit = "Intercept")
+model_plot
 
 ```
 
@@ -361,8 +424,7 @@ wn possibly long tables. Note that the following will fit on one page if it can,
 
 # Conclusion \label{conclusion}
 
- You should NOT write an extensive essay about the topic of interest, nor should you conduct
-an extensive literature review behind it: you should only reference articles that support the
+You should NOT write an extensive essay about the topic of interest, nor should you conduct an extensive literature review behind it: you should only reference articles that support the
 motivation for your econometric strategy (in the quest of finding a causal interpretation of a relationship that you are modeling).
 Provide descriptive statistics and graphs to aid in your discussion.
 The assignment should be between 3-6 pages, including your tables and figures.
