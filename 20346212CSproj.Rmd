@@ -108,8 +108,6 @@ library(ivreg)
 library(ggplot2)
 #read in nids
 data <- read_dta("data/Adult_W5_Anon_V1.0.0.dta")
-
-
 ```
 
 \newpage
@@ -121,16 +119,20 @@ data <- read_dta("data/Adult_W5_Anon_V1.0.0.dta")
 
 The return to education is a cornerstone topic in labour economics and is of particular interest to policymakers. This is no different in South Africa, especially given the significant income inequality, which is often claimed to be strongly linked to differences in education. However, wages cannot simply be regressed on education because there is likely endogeneity present. This arises from the problem of there being an omitted variable, where education and wages are both correlated with a variable in the error term. One variable of this nature that has been extensively studied is innate ability (@hertz). Returns to schooling could be biased upwards if ability is positively correlated with both income and education. However, as @disc assesses, the overall findings of research on the impact of ability bias are inconclusive. In fact, @disc [p.1] notes that several papers find that returns to education are _downwardly_ biased. 
 
-This paper will investigate whether OLS estimates are biased in the South African case by estimating the return to education using four different instrumental variable estimators: the first two exploit parents' education, and the other two use parents' occupations. These instruments estimate a ‘local average treatment effect’, which - this paper will argue - is more appropriate than OLS estimators for analysing the returns to education for South Africa. These instruments are tested for strength and validity and then implemented on the NIDS Wave 5 data set. This essay^[This essay was written in R using the Texevier package by @Texevier] is structured as follows: section \ref{data} details the data set used and discusses the descriptive statistics. Section \ref{meth} outlines the methodology and argues that the LATE assumptions for the instrumental variables hold. Following this, section \ref{results} presents the regression results and evaluates the robustness of the estimators used to obtain a causal effect. The final section, \ref{conclusion}, concludes.
+This paper will investigate whether OLS estimates are biased in the South African case by estimating the return to education using four different instrumental variable estimators: the first two exploit parents' education, and the other two use parents' occupations. These instruments estimate a ‘local average treatment effect’, which - this paper will argue - is more appropriate than OLS estimators for analysing the returns to education for South Africa. These instruments are tested for strength and validity and then implemented on the NIDS Wave 5 data set. This essay^[This essay was written in R using the Texevier package by @Texevier] is structured as follows: section \ref{data} details the data set used and discusses the descriptive statistics. Section \ref{meth} outlines the methodology and argues that the LATE assumptions for the instrumental variables hold. Following this, section \ref{results} presents the regression results and evaluates the robustness of the estimators used to obtain a causal effect. The final section, \ref{conclusion}, concludes^[The code and write up for this project can be found on Github https://github.com/cass-code/Cross-Section.git].
 
 # Data \label{data}
 
-mention survey design for NIDS @nids
-@isco for occupation classification
+The data used for this paper is sourced from the National Income Dynamics Survey (NIDS) (@nids), which was the first national household panel study in South Africa. NIDS is an initiative of the Department of Planning, Monitoring and Evaluation, and the Southern Africa Labour and Development Research Unit (SALDRU) is tasked with implementation (@nids5). NIDS was started in 2008, interviewing over 28,000 people. These same people are then interviewed every two years. The latest survey is Wave 5 (2017), which is the data set used for the regression analysis, where the individual is the unit of observation. Wave 5 consists of 37,368 individuals, where the high rate of attrition among high-income, Indian/Asian, and White respondents has led to the sample being increased by 2,775 to maintain sample representativeness (@nids5).
 
-\ref{Figure1} gives a quick snapshot of the relationship between income and education. We can see that income and education are positively correlated, which is what we expect. We can  
+@nids1 outlays the design of the survey. To sample the households used in Wave 1, two-stage cluster sample design with stratification was employed. Stage 1 involved selecting 400 Primary Sampling Units, based on Statistics South Africa's Master Sample of 300 Primary Sampling Units (2003). Private households in all of South Africa's 9 provinces are the target population for NIDS. The 53 disctrict councils make up the explicit strata in the Master sample. Based on the allocation of the district councils in the Primary Sampling Units in the Master Sample, the sample was proportionally allocated and the Primary Sampling Units were randomly chosen within the strata (@nids1 p.9). Fieldworkers are assigned to the selected addresses and are instructed to interview all households living at the dwelling unit.
 
-```{r lineargraph,  warning =  FALSE, fig.align = 'center', fig.cap = "Income and Education Relationship \\label{Figure1}", fig.ext = 'png', fig.height = 3, fig.width = 6}
+The NIDS wave 5 data set contains 30,110 observations of 1,144 variables. As a part of the data cleaning process, I selected 14 variables: year of birth, gender, race, income, marital status, highest level of schooling, highest level of tertiary education, union status, father's schooling, father's tertiary education, father's occupation, mother's schooling, mother's tertiary education, and mother's occupation. The occupation variables have been re-coded with the appropriate profession names from the @isco, and are therefore categorical variables. I constructed the variables age and age-squared from the year of birth, and I constructed an education variable, which represents the number of years of education for an individual (i.e. summing the years of schooling and years of tertiary education). I constructed a similar variable for mother and father's education. Unfortunately, there are a significant number of missing observations for the variables income, parents' education, marital status and union status. Because of this, the sample size for the regressions is reduced to 3,300 and under.  
+
+As a part of the initial data exploration, figure \ref{Figure1} gives a quick snapshot of the relationship between income and education. As shown by the black regression line, income and education are positively correlated, which is what we expect. Section \ref{results} will argue that this is a causal relationship. We can also glimpse how education and income is distributed in the sample. To get a clearer view of the race distribution, figure \ref{Figure2} shows a bar plot of the four main race groups in South Africa: African, Asian/Indian, Coloured and White. The graph shows the sample is roughly representative of the South African population, with a slightly smaller sample of Coloured and White individuals (despite the top up sample). We also want to check that income is normally distributed to combat heteroskedasticity in the regression analysis. We find that the income distribution is skewed but log of income is fairly normal, as figure \ref{Figure3} shows. This indicates that log of income should be the dependent variable in the regressions (rather the linear form of income), which is also supported by the literature.
+
+
+```{r lineargraph,  warning =  FALSE, fig.align = 'center', fig.cap = "Income and Education Relationship \\label{Figure1}", fig.ext = 'png', fig.height = 2.2, fig.width = 5}
 
 library(haven)
 data <- read_dta("data/Adult_W5_Anon_V1.0.0.dta")
@@ -155,7 +157,7 @@ g
 
 ```
 
-```{r racegraph,  warning =  FALSE, fig.align = 'center', fig.cap = "Income and Education Relationship \\label{Figure1}", fig.ext = 'png', fig.height = 3, fig.width = 6}
+```{r racegraph,  warning =  FALSE, fig.align = 'center', fig.cap = "Race Proportions of Sample \\label{Figure2}", fig.ext = 'png', fig.height = 2.2, fig.width = 5}
 
 library(haven)
 data <- read_dta("data/Adult_W5_Anon_V1.0.0.dta")
@@ -174,13 +176,105 @@ g
 
 ```
   
-# Methodology \label{meth}
-This project makes use of 4 different instrument variables: fathers occupation, mothers occupation, mothers education and fathers education
+  
+```{r incomergraph,  warning =  FALSE, fig.align = 'center', fig.cap = "Log Income Distribution  \\label{Figure3}", fig.ext = 'png', fig.height = 2.2, fig.width = 5}
 
-# Results \label{results}
+library(haven)
+data <- read_dta("data/Adult_W5_Anon_V1.0.0.dta")
+list.files('code/', full.names = T, recursive = T) %>% as.list() %>% walk(~source(.))
+dfplot <- plot_eduInc(data) 
+library(ggplot2)
+
+g<-
+ggplot(dfplot, aes(x=log(income), fill=income)) +
+  geom_histogram(fill="#F8766D", color="#F8766D")+
+    labs(title="Distribution of Log Income",x="Log of Income", y = "")+
+  theme_minimal()
+g
+
+```  
+  
+# Methodology \label{meth}
+
+Following the earnings function proposed by @mince, to model the relationship between income and education in \ref{reg1}, the following general OLS regression, \ref{eq1}, is used:
+\begin{align}
+Log(income)=\beta_{0}+\beta_{1} X_{1}+\cdots+\beta_{k} X_{k}+u  \label{eq1}
+\end{align}
+where $X_{1}$ is education and $\ldots, X_{k}$ includes the other regressors: age, age-squared, race and gender, $\beta_{0}, \ldots, \beta_{k}$ are the regression coefficients, and $u$ is the error term. Race is a categorical variable with the reference group as African, and gender is a dummy variable that takes a value of 1 if an individual is male and 0 otherwise.
+
+If education is an endogenous regressor - i.e. correlated with the error term - then the OLS coefficient for education ($\beta_{1}$) will be biased. If we can find an instrumental variable for education, then we can remove this endogeneity and get an unbiased coefficient for education (@metrics & @metrics1). 4 different variables are used as an instrument for an individual's education: fathers education, mother's education, father's occupation and mother's occupation. In order to use these variables as instruments, we have to check their validity(@ang). Economic theory and the literature suggests that returns to schooling are heterogeneous (@return [p.827-828]), which implies that for the instruments to be valid they have to comply with the Local Average Treatment Effects (LATE) identifying assumptions. The four LATE assumptions are: independence, random assignment, exclusion restriction, and monotonicity. 
+
+If our instrument is:
+1. randomly assigned
+2. only affects our outcome through its effect on our endogenous variable
+3. has a significant impact on take-up of treatment, and
+4. does not deter anyone from treatment
+
+Random Assignment:
+Random assignment of draft eligibility means independence assumption is very convincing.
+Would not expect individuals who were born on low-lottery days to have different potential earnings distributions or potential take-up probabilities than high-lottery individuals.
+
+Exclusion restriction:
+More reason to be concerned.
+Draft eligible men were allowed to defer their military service if they wanted to proceed with their studies.
+If some men decided to get more schooling because they had low lottery numbers and did not want to serve in the military, then this could have affected earnings via education attainment rather than via military service.
+
+Monotonicity:
+It seemse unlikely that someone who would have pursued education further would decide not to because either of his/her parent pursued education further. Thus it's reasonable to conclude that the monotonicity assumption holds (i.e. there are no defiers).
+
+
+Is it possible that someone would have volunteered for the army (if draft ineligible) but decided not to because of draft eligibility? Seems unlikely.
+
+The relevance assumption is testable and table ref\{reg5} shows that both parents' education is correlated with education (and the coefficients are statistically significant at a 1% level). This means these instruments affect treatment for at least some individuals. The regression of education on parents' occuation shows that joint effect of the occupation types are significant. The p-values associated with the F-test for each regression are presented in \ref{tab}. The p-values are essentially 0 and thus reject the null hypothesis that the joint effect is zero. From an intuitive stand point, if an individual's parents pursued more years of education, 
+
+Are there individuals who would not have gone to war if they didn’t get picked, but ended up going just because they were eligible? Seems plausible. 
+
+```{r, echo=FALSE, warning =  FALSE,message= FALSE, fig.align = 'center', fig.cap = "Relevance of Instruments \\label{reg5}", fig.ext = 'png', fig.height = 3, fig.width = 6, results='asis'}
+list.files('code/', full.names = T, recursive = T) %>% as.list() %>% walk(~source(.))
+d1 <- iv_father(data)
+d2 <- iv_mother(data)
+d3 <- f_occ(data)
+d4 <- m_occ(data)
+lm1 <-lm(education ~ father_ed, d1)
+lm2 <-lm(education ~ mother_ed, d2)
+lm3 <-lm(education ~ father_occ, d3)
+lm4 <-lm(education ~ mother_occ, d4)
+
+
+library(huxtable)
+Title <- "Regressions: Instrument Relevance"
+Label <- "reg5"
+htab <-
+huxreg("Education" = lm1, "Education" = lm2,
+                coefs = c("Father's Education" = "father_ed", "Mother's Education" = "mother_ed"),
+                statistics = c(N = "nobs", R2 = "r.squared"),
+                note = "%stars%.") %>%
+  set_caption(Title) %>%
+  set_label(Label)
+font_size(htab) <- 11
+htab
+
+m3 <- summary(lm3)
+m4 <- summary(lm4)
+
+F3 <- pf(m3$fstatistic[1],m3$fstatistic[2],m3$fstatistic[3],lower.tail=FALSE) 
+F4 <- pf(m4$fstatistic[1],m4$fstatistic[2],m4$fstatistic[3],lower.tail=FALSE)
+
+Fstats <- data.frame("Regression" = c("Regress Education on Father's Occupation", "Regress Education on Mother's Occupation"), "p-value" = c("4.748773e-54", "2.356427e-61")) %>% tibble::as_tibble()
+library(kableExtra)
+tab <- 
+  kable(Fstats, caption = "p-values of F statistics \\label{tab}")
+tab
+```
+
+
+
+
 
 ## Specification Tests
 
+
+# Results \label{results}
 
 ```{r regression1,  echo=FALSE, warning =  FALSE,message= FALSE, fig.align = 'center', fig.cap = "Regressions with log(income) as the dependent variable \\label{reg1}", fig.ext = 'png', fig.height = 3, fig.width = 6, results='asis'}
 library(haven)
@@ -206,7 +300,7 @@ Title <- "Regressions: Father's Education as Instrument"
 Label <- "reg1"
 htab <-
 huxreg("OLS" = lm1, "2SLS FE" = iv1, "2SLS ME" = iv2, "2SLS FO" = iv3, "2SLS MO" = iv4,
-                coefs = c("age" = "age", "age2" = "age2", "education" = "education", "Coloured" = "raceColoured", "Asian/Indian" = "raceAsian/Indian", "White" = "raceWhite", "Male" = "genderMale" ),
+                coefs = c("Age" = "age", "Age2" = "age2", "Education" = "education", "Coloured" = "raceColoured", "Asian/Indian" = "raceAsian/Indian", "White" = "raceWhite", "Male" = "genderMale" ),
                 statistics = c(N = "nobs", R2 = "r.squared"),
                 note = "%stars%.") %>%
   set_caption(Title) %>%
@@ -277,20 +371,13 @@ You are required to go beyond simply estimating and presenting your results, but
 
 Determine an effect of interest and find instrumental variables to estimate it causally. If possible, use more than one instrument. Given the LATE assumptions, try and explain why your results differ and which is likely to represent the causal effect you are looking for. Conduct sufficient specification tests to establish whether you are overidentifying your instrument set or whether the IVs shift the estimates enough to indicate that OLS would be inconsistent.
 
-\begin{figure}[htbp]
-\centering
-\includegraphics{Tex/conclusion.jpg}
-\caption{\label{con}}
-\end{figure}
-
-
 \newpage
 
 # References {-}
 
 <div id="refs"></div>
 
-
+\newpage
 # Appendix {-}
 
 ## Appendix A {-}

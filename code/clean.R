@@ -34,7 +34,6 @@ clean <- function(data){
       mutate(married = replace(married, married >= 2, 0)) %>%
       rename (male = gender)
     
-    
     #%>% 
     #filter(race > 0 & race <5, income >=0, gender >0, married >0, school >=0, union >0, father_schl>=0, father_tert>=0, father_occ>=0, mother_schl>=0, mother_tert>=0, mother_occ>=0)
     

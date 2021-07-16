@@ -1,0 +1,13 @@
+@article{return,
+ ISSN = {08837252, 10991255},
+ URL = {http://www.jstor.org/stable/25146329},
+ author = {Gary Koop and Justin L. Tobias},
+ journal = {Journal of Applied Econometrics},
+ number = {7},
+ pages = {827--849},
+ publisher = {Wiley},
+ title = {Learning about Heterogeneity in Returns to Schooling},
+ volume = {19},
+ year = {2004}
+}
+

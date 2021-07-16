@@ -135,18 +135,26 @@
 \IfFileExists{upquote.sty}{\usepackage{upquote}}{}
 
 %%% Include extra packages specified by user
+\usepackage{booktabs}
+\usepackage{longtable}
 \usepackage{array}
+\usepackage{multirow}
+\usepackage{wrapfig}
+\usepackage{float}
+\usepackage{colortbl}
+\usepackage{pdflscape}
+\usepackage{tabu}
+\usepackage{threeparttable}
+\usepackage{threeparttablex}
+\usepackage[normalem]{ulem}
+\usepackage{makecell}
+\usepackage{xcolor}
 \usepackage{caption}
 \usepackage{graphicx}
 \usepackage{siunitx}
-\usepackage[normalem]{ulem}
-\usepackage{colortbl}
-\usepackage{multirow}
 \usepackage{hhline}
 \usepackage{calc}
 \usepackage{tabularx}
-\usepackage{threeparttable}
-\usepackage{wrapfig}
 \usepackage{adjustbox}
 \usepackage{hyperref}
 
@@ -262,6 +270,8 @@ Variables for Education\par}}
 
 
 
+\newpage
+
 \hypertarget{introduction}{%
 \section{\texorpdfstring{Introduction
 \label{Introduction}}{Introduction }}\label{introduction}}
@@ -301,15 +311,86 @@ descriptive statistics. Section \ref{meth} outlines the methodology and
 argues that the LATE assumptions for the instrumental variables hold.
 Following this, section \ref{results} presents the regression results
 and evaluates the robustness of the estimators used to obtain a causal
-effect. The final section, \ref{conclusion}, concludes.
+effect. The final section, \ref{conclusion}, concludes\footnote{The code
+  and write up for this project can be found on Github
+  \url{https://github.com/cass-code/Cross-Section.git}}.
 
 \hypertarget{data}{%
 \section{\texorpdfstring{Data \label{data}}{Data }}\label{data}}
 
-mention survey design for NIDS
+The data used for this paper is sourced from the National Income
+Dynamics Survey (NIDS) (\protect\hyperlink{ref-nids}{\emph{National
+income dynamics study 2017, wave 5 dataset}}
+(\protect\hyperlink{ref-nids}{2018})), which was the first national
+household panel study in South Africa. NIDS is an initiative of the
+Department of Planning, Monitoring and Evaluation, and the Southern
+Africa Labour and Development Research Unit (SALDRU) is tasked with
+implementation (\protect\hyperlink{ref-nids5}{Brophy, Branson, Daniels,
+Leibbrandt, Mlatsheni \& Woolard}
+(\protect\hyperlink{ref-nids5}{2018})). NIDS was started in 2008,
+interviewing over 28,000 people. These same people are then interviewed
+every two years. The latest survey is Wave 5 (2017), which is the data
+set used for the regression analysis, where the individual is the unit
+of observation. Wave 5 consists of 37,368 individuals, where the high
+rate of attrition among high-income, Indian/Asian, and White respondents
+has led to the sample being increased by 2,775 to maintain sample
+representativeness (\protect\hyperlink{ref-nids5}{Brophy, Branson,
+Daniels, Leibbrandt, Mlatsheni \& Woolard}
+(\protect\hyperlink{ref-nids5}{2018})).
+
+\protect\hyperlink{ref-nids1}{Villiers, Leibbrandt \& Woolard}
+(\protect\hyperlink{ref-nids1}{2009}) outlays the design of the survey.
+To sample the households used in Wave 1, two-stage cluster sample design
+with stratification was employed. Stage 1 involved selecting 400 Primary
+Sampling Units, based on Statistics South Africa's Master Sample of 300
+Primary Sampling Units (2003). Private households in all of South
+Africa's 9 provinces are the target population for NIDS. The 53
+disctrict councils make up the explicit strata in the Master sample.
+Based on the allocation of the district councils in the Primary Sampling
+Units in the Master Sample, the sample was proportionally allocated and
+the Primary Sampling Units were randomly chosen within the strata
+(\protect\hyperlink{ref-nids1}{Villiers, Leibbrandt \& Woolard}
+(\protect\hyperlink{ref-nids1}{2009}) p.9). Fieldworkers are assigned to
+the selected addresses and are instructed to interview all households
+living at the dwelling unit.
+
+The NIDS wave 5 data set contains 30,110 observations of 1,144
+variables. As a part of the data cleaning process, I selected 14
+variables: year of birth, gender, race, income, marital status, highest
+level of schooling, highest level of tertiary education, union status,
+father's schooling, father's tertiary education, father's occupation,
+mother's schooling, mother's tertiary education, and mother's
+occupation. The occupation variables have been re-coded with the
+appropriate profession names from the
 \protect\hyperlink{ref-isco}{\emph{International standard classification
-of occupations}} (\protect\hyperlink{ref-isco}{2012}) for occupation
-classification
+of occupations}} (\protect\hyperlink{ref-isco}{2012}), and are therefore
+categorical variables. I constructed the variables age and age-squared
+from the year of birth, and I constructed an education variable, which
+represents the number of years of education for an individual
+(i.e.~summing the years of schooling and years of tertiary education). I
+constructed a similar variable for mother and father's education.
+Unfortunately, there are a significant number of missing observations
+for the variables income, parents' education, marital status and union
+status. Because of this, the sample size for the regressions is reduced
+to 3,300 and under.
+
+As a part of the initial data exploration, figure \ref{Figure1} gives a
+quick snapshot of the relationship between income and education. As
+shown by the black regression line, income and education are positively
+correlated, which is what we expect. Section \ref{results} will argue
+that this is a causal relationship. We can also glimpse how education
+and income is distributed in the sample. To get a clearer view of the
+race distribution, figure \ref{Figure2} shows a bar plot of the four
+main race groups in South Africa: African, Asian/Indian, Coloured and
+White. The graph shows the sample is roughly representative of the South
+African population, with a slightly smaller sample of Coloured and White
+individuals (despite the top up sample). We also want to check that
+income is normally distributed to combat heteroskedasticity in the
+regression analysis. We find that the income distribution is skewed but
+log of income is fairly normal, as figure \ref{Figure3} shows. This
+indicates that log of income should be the dependent variable in the
+regressions (rather the linear form of income), which is also supported
+by the literature.
 
 \begin{figure}[H]
 
@@ -326,22 +407,200 @@ classification
 
 }
 
-\caption{Income and Education Relationship \label{Figure1}}\label{fig:racegraph}
+\caption{Race Proportions of Sample \label{Figure2}}\label{fig:racegraph}
+\end{figure}
+
+\begin{figure}[H]
+
+{\centering \includegraphics{20346212CSproj_files/figure-latex/incomergraph-1} 
+
+}
+
+\caption{Log Income Distribution  \label{Figure3}}\label{fig:incomergraph}
 \end{figure}
 
 \hypertarget{methodology}{%
 \section{\texorpdfstring{Methodology
 \label{meth}}{Methodology }}\label{methodology}}
 
-This project makes use of 4 different instrument variables: fathers
-occupation, mothers occupation, mothers education and fathers education
+Following the earnings function proposed by
+\protect\hyperlink{ref-mince}{Mincer}
+(\protect\hyperlink{ref-mince}{1974}), to model the relationship between
+income and education in \ref{reg1}, the following general OLS
+regression, \ref{eq1}, is used: \begin{align}
+Log(income)=\beta_{0}+\beta_{1} X_{1}+\cdots+\beta_{k} X_{k}+u  \label{eq1}
+\end{align} where \(X_{1}\) is education and \(\ldots, X_{k}\) includes
+the other regressors: age, age-squared, race and gender,
+\(\beta_{0}, \ldots, \beta_{k}\) are the regression coefficients, and
+\(u\) is the error term. Race is a categorical variable with the
+reference group as African, and gender is a dummy variable that takes a
+value of 1 if an individual is male and 0 otherwise.
+
+If education is an endogenous regressor - i.e.~correlated with the error
+term - then the OLS coefficient for education (\(\beta_{1}\)) will be
+biased. If we can find an instrumental variable for education, then we
+can remove this endogeneity and get an unbiased coefficient for
+education (\protect\hyperlink{ref-metrics}{Stock \& Watson}
+(\protect\hyperlink{ref-metrics}{2015}) \&
+\protect\hyperlink{ref-metrics1}{Venables \& Smith}
+(\protect\hyperlink{ref-metrics1}{2010})). 4 different variables are
+used as an instrument for an individual's education: fathers education,
+mother's education, father's occupation and mother's occupation. In
+order to use these variables as instruments, we have to check their
+validity(\protect\hyperlink{ref-ang}{Imbens \& Angrist}
+(\protect\hyperlink{ref-ang}{1994})). Economic theory and the literature
+suggests that returns to schooling are heterogeneous
+(\protect\hyperlink{ref-return}{Koop \& Tobias}
+(\protect\hyperlink{ref-return}{2004: 827--828})), which implies that
+for the instruments to be valid they have to comply with the Local
+Average Treatment Effects (LATE) identifying assumptions. The four LATE
+assumptions are: independence, random assignment, exclusion restriction,
+and monotonicity.
+
+Random Assignment: Random assignment of draft eligibility means
+independence assumption is very convincing. Would not expect individuals
+who were born on low-lottery days to have different potential earnings
+distributions or potential take-up probabilities than high-lottery
+individuals.
+
+Exclusion restriction: More reason to be concerned. Draft eligible men
+were allowed to defer their military service if they wanted to proceed
+with their studies. If some men decided to get more schooling because
+they had low lottery numbers and did not want to serve in the military,
+then this could have affected earnings via education attainment rather
+than via military service.
+
+Monotonicity: Is it possible that someone would have volunteered for the
+army (if draft ineligible) but decided not to because of draft
+eligibility? Seems unlikely.
+
+The relevance assumption is testable and table ref\{reg5\} shows that
+both parents' education is correlated with education (and the
+coefficients are statistically significant at a 1\% level). This means
+these instruments affect treatment for at least some individuals. The
+regression of education on parents' occuation shows that joint effect of
+the occupation types are significant. The p-values associated with the
+F-test for each regression are presented in \ref{tab}. The p-values are
+essentially 0 and thus reject the null hypothesis that the joint effect
+is zero. From an intuitive stand point, if an individual's parents
+pursued more years of education,
+
+Are there individuals who would not have gone to war if they didn't get
+picked, but ended up going just because they were eligible? Seems
+plausible.
+
+ 
+  \providecommand{\huxb}[2]{\arrayrulecolor[RGB]{#1}\global\arrayrulewidth=#2pt}
+  \providecommand{\huxvb}[2]{\color[RGB]{#1}\vrule width #2pt}
+  \providecommand{\huxtpad}[1]{\rule{0pt}{#1}}
+  \providecommand{\huxbpad}[1]{\rule[-#1]{0pt}{#1}}
+
+\begin{table}[ht]
+\begin{centerbox}
+\begin{threeparttable}
+\captionsetup{justification=centering,singlelinecheck=off}
+\caption{Regressions: Instrument Relevance}
+ \label{reg5}
+\setlength{\tabcolsep}{0pt}
+\begin{tabular}{l l l}
+
+
+\hhline{>{\huxb{0, 0, 0}{0.8}}->{\huxb{0, 0, 0}{0.8}}->{\huxb{0, 0, 0}{0.8}}-}
+\arrayrulecolor{black}
+
+\multicolumn{1}{!{\huxvb{0, 0, 0}{0}}c!{\huxvb{0, 0, 0}{0}}}{\huxtpad{6pt + 1em}\centering \hspace{6pt} {\fontsize{11pt}{13.2pt}\selectfont } \hspace{6pt}\huxbpad{6pt}} &
+\multicolumn{1}{c!{\huxvb{0, 0, 0}{0}}}{\huxtpad{6pt + 1em}\centering \hspace{6pt} {\fontsize{11pt}{13.2pt}\selectfont Education} \hspace{6pt}\huxbpad{6pt}} &
+\multicolumn{1}{c!{\huxvb{0, 0, 0}{0}}}{\huxtpad{6pt + 1em}\centering \hspace{6pt} {\fontsize{11pt}{13.2pt}\selectfont Education} \hspace{6pt}\huxbpad{6pt}} \tabularnewline[-0.5pt]
+
+
+\hhline{>{\huxb{255, 255, 255}{0.4}}->{\huxb{0, 0, 0}{0.4}}->{\huxb{0, 0, 0}{0.4}}-}
+\arrayrulecolor{black}
+
+\multicolumn{1}{!{\huxvb{0, 0, 0}{0}}l!{\huxvb{0, 0, 0}{0}}}{\huxtpad{6pt + 1em}\raggedright \hspace{6pt} {\fontsize{11pt}{13.2pt}\selectfont Father's Education} \hspace{6pt}\huxbpad{6pt}} &
+\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{6pt + 1em}\raggedleft \hspace{6pt} {\fontsize{11pt}{13.2pt}\selectfont 0.234 ***} \hspace{6pt}\huxbpad{6pt}} &
+\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{6pt + 1em}\raggedleft \hspace{6pt} {\fontsize{11pt}{13.2pt}\selectfont ~~~~~~~~} \hspace{6pt}\huxbpad{6pt}} \tabularnewline[-0.5pt]
+
+
+\hhline{}
+\arrayrulecolor{black}
+
+\multicolumn{1}{!{\huxvb{0, 0, 0}{0}}l!{\huxvb{0, 0, 0}{0}}}{\huxtpad{6pt + 1em}\raggedright \hspace{6pt} {\fontsize{11pt}{13.2pt}\selectfont } \hspace{6pt}\huxbpad{6pt}} &
+\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{6pt + 1em}\raggedleft \hspace{6pt} {\fontsize{11pt}{13.2pt}\selectfont (0.008)~~~} \hspace{6pt}\huxbpad{6pt}} &
+\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{6pt + 1em}\raggedleft \hspace{6pt} {\fontsize{11pt}{13.2pt}\selectfont ~~~~~~~~} \hspace{6pt}\huxbpad{6pt}} \tabularnewline[-0.5pt]
+
+
+\hhline{}
+\arrayrulecolor{black}
+
+\multicolumn{1}{!{\huxvb{0, 0, 0}{0}}l!{\huxvb{0, 0, 0}{0}}}{\huxtpad{6pt + 1em}\raggedright \hspace{6pt} {\fontsize{11pt}{13.2pt}\selectfont Mother's Education} \hspace{6pt}\huxbpad{6pt}} &
+\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{6pt + 1em}\raggedleft \hspace{6pt} {\fontsize{11pt}{13.2pt}\selectfont ~~~~~~~~} \hspace{6pt}\huxbpad{6pt}} &
+\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{6pt + 1em}\raggedleft \hspace{6pt} {\fontsize{11pt}{13.2pt}\selectfont 0.247 ***} \hspace{6pt}\huxbpad{6pt}} \tabularnewline[-0.5pt]
+
+
+\hhline{}
+\arrayrulecolor{black}
+
+\multicolumn{1}{!{\huxvb{0, 0, 0}{0}}l!{\huxvb{0, 0, 0}{0}}}{\huxtpad{6pt + 1em}\raggedright \hspace{6pt} {\fontsize{11pt}{13.2pt}\selectfont } \hspace{6pt}\huxbpad{6pt}} &
+\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{6pt + 1em}\raggedleft \hspace{6pt} {\fontsize{11pt}{13.2pt}\selectfont ~~~~~~~~} \hspace{6pt}\huxbpad{6pt}} &
+\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{6pt + 1em}\raggedleft \hspace{6pt} {\fontsize{11pt}{13.2pt}\selectfont (0.008)~~~} \hspace{6pt}\huxbpad{6pt}} \tabularnewline[-0.5pt]
+
+
+\hhline{>{\huxb{255, 255, 255}{0.4}}->{\huxb{0, 0, 0}{0.4}}->{\huxb{0, 0, 0}{0.4}}-}
+\arrayrulecolor{black}
+
+\multicolumn{1}{!{\huxvb{0, 0, 0}{0}}l!{\huxvb{0, 0, 0}{0}}}{\huxtpad{6pt + 1em}\raggedright \hspace{6pt} {\fontsize{11pt}{13.2pt}\selectfont N} \hspace{6pt}\huxbpad{6pt}} &
+\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{6pt + 1em}\raggedleft \hspace{6pt} {\fontsize{11pt}{13.2pt}\selectfont 3376~~~~~~~~} \hspace{6pt}\huxbpad{6pt}} &
+\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{6pt + 1em}\raggedleft \hspace{6pt} {\fontsize{11pt}{13.2pt}\selectfont 3613~~~~~~~~} \hspace{6pt}\huxbpad{6pt}} \tabularnewline[-0.5pt]
+
+
+\hhline{}
+\arrayrulecolor{black}
+
+\multicolumn{1}{!{\huxvb{0, 0, 0}{0}}l!{\huxvb{0, 0, 0}{0}}}{\huxtpad{6pt + 1em}\raggedright \hspace{6pt} {\fontsize{11pt}{13.2pt}\selectfont R2} \hspace{6pt}\huxbpad{6pt}} &
+\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{6pt + 1em}\raggedleft \hspace{6pt} {\fontsize{11pt}{13.2pt}\selectfont 0.190~~~~} \hspace{6pt}\huxbpad{6pt}} &
+\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{6pt + 1em}\raggedleft \hspace{6pt} {\fontsize{11pt}{13.2pt}\selectfont 0.197~~~~} \hspace{6pt}\huxbpad{6pt}} \tabularnewline[-0.5pt]
+
+
+\hhline{>{\huxb{0, 0, 0}{0.8}}->{\huxb{0, 0, 0}{0.8}}->{\huxb{0, 0, 0}{0.8}}-}
+\arrayrulecolor{black}
+
+\multicolumn{3}{!{\huxvb{0, 0, 0}{0}}l!{\huxvb{0, 0, 0}{0}}}{\huxtpad{6pt + 1em}\raggedright \hspace{6pt} {\fontsize{11pt}{13.2pt}\selectfont  *** p $<$ 0.001;  ** p $<$ 0.01;  * p $<$ 0.05.} \hspace{6pt}\huxbpad{6pt}} \tabularnewline[-0.5pt]
+
+
+\hhline{}
+\arrayrulecolor{black}
+\end{tabular}
+\end{threeparttable}\par\end{centerbox}
+
+\end{table}
+ 
+
+\begin{table}
+
+\caption{\label{tab:unnamed-chunk-1}p-values of F statistics \label{tab}}
+\centering
+\begin{tabular}[t]{l|l}
+\hline
+Regression & p.value\\
+\hline
+Regress Education on Father's Occupation & 4.748773e-54\\
+\hline
+Regress Education on Mother's Occupation & 2.356427e-61\\
+\hline
+\end{tabular}
+\end{table}
+
+If our instrument is: 1. randomly assigned 2. only affects our outcome
+through its effect on our endogenous variable 3. has a significant
+impact on take-up of treatment, and 4. does not deter anyone from
+treatment
+
+\hypertarget{specification-tests}{%
+\subsection{Specification Tests}\label{specification-tests}}
 
 \hypertarget{results}{%
 \section{\texorpdfstring{Results
 \label{results}}{Results }}\label{results}}
-
-\hypertarget{specification-tests}{%
-\subsection{Specification Tests}\label{specification-tests}}
 
  
   \providecommand{\huxb}[2]{\arrayrulecolor[RGB]{#1}\global\arrayrulewidth=#2pt}
@@ -373,7 +632,7 @@ occupation, mothers occupation, mothers education and fathers education
 \hhline{>{\huxb{255, 255, 255}{0.4}}->{\huxb{0, 0, 0}{0.4}}->{\huxb{0, 0, 0}{0.4}}->{\huxb{0, 0, 0}{0.4}}->{\huxb{0, 0, 0}{0.4}}->{\huxb{0, 0, 0}{0.4}}-}
 \arrayrulecolor{black}
 
-\multicolumn{1}{!{\huxvb{0, 0, 0}{0}}l!{\huxvb{0, 0, 0}{0}}}{\huxtpad{6pt + 1em}\raggedright \hspace{6pt} {\fontsize{12pt}{14.4pt}\selectfont age} \hspace{6pt}\huxbpad{6pt}} &
+\multicolumn{1}{!{\huxvb{0, 0, 0}{0}}l!{\huxvb{0, 0, 0}{0}}}{\huxtpad{6pt + 1em}\raggedright \hspace{6pt} {\fontsize{12pt}{14.4pt}\selectfont Age} \hspace{6pt}\huxbpad{6pt}} &
 \multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{6pt + 1em}\raggedleft \hspace{6pt} {\fontsize{12pt}{14.4pt}\selectfont 0.047 ***} \hspace{6pt}\huxbpad{6pt}} &
 \multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{6pt + 1em}\raggedleft \hspace{6pt} {\fontsize{12pt}{14.4pt}\selectfont 0.040 ***} \hspace{6pt}\huxbpad{6pt}} &
 \multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{6pt + 1em}\raggedleft \hspace{6pt} {\fontsize{12pt}{14.4pt}\selectfont 0.049 ***} \hspace{6pt}\huxbpad{6pt}} &
@@ -395,7 +654,7 @@ occupation, mothers occupation, mothers education and fathers education
 \hhline{}
 \arrayrulecolor{black}
 
-\multicolumn{1}{!{\huxvb{0, 0, 0}{0}}l!{\huxvb{0, 0, 0}{0}}}{\huxtpad{6pt + 1em}\raggedright \hspace{6pt} {\fontsize{12pt}{14.4pt}\selectfont age2} \hspace{6pt}\huxbpad{6pt}} &
+\multicolumn{1}{!{\huxvb{0, 0, 0}{0}}l!{\huxvb{0, 0, 0}{0}}}{\huxtpad{6pt + 1em}\raggedright \hspace{6pt} {\fontsize{12pt}{14.4pt}\selectfont Age2} \hspace{6pt}\huxbpad{6pt}} &
 \multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{6pt + 1em}\raggedleft \hspace{6pt} {\fontsize{12pt}{14.4pt}\selectfont -0.000 **~} \hspace{6pt}\huxbpad{6pt}} &
 \multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{6pt + 1em}\raggedleft \hspace{6pt} {\fontsize{12pt}{14.4pt}\selectfont -0.000~~~~} \hspace{6pt}\huxbpad{6pt}} &
 \multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{6pt + 1em}\raggedleft \hspace{6pt} {\fontsize{12pt}{14.4pt}\selectfont -0.000 *~~} \hspace{6pt}\huxbpad{6pt}} &
@@ -417,7 +676,7 @@ occupation, mothers occupation, mothers education and fathers education
 \hhline{}
 \arrayrulecolor{black}
 
-\multicolumn{1}{!{\huxvb{0, 0, 0}{0}}l!{\huxvb{0, 0, 0}{0}}}{\huxtpad{6pt + 1em}\raggedright \hspace{6pt} {\fontsize{12pt}{14.4pt}\selectfont education} \hspace{6pt}\huxbpad{6pt}} &
+\multicolumn{1}{!{\huxvb{0, 0, 0}{0}}l!{\huxvb{0, 0, 0}{0}}}{\huxtpad{6pt + 1em}\raggedright \hspace{6pt} {\fontsize{12pt}{14.4pt}\selectfont Education} \hspace{6pt}\huxbpad{6pt}} &
 \multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{6pt + 1em}\raggedleft \hspace{6pt} {\fontsize{12pt}{14.4pt}\selectfont 0.194 ***} \hspace{6pt}\huxbpad{6pt}} &
 \multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{6pt + 1em}\raggedleft \hspace{6pt} {\fontsize{12pt}{14.4pt}\selectfont 0.309 ***} \hspace{6pt}\huxbpad{6pt}} &
 \multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{6pt + 1em}\raggedleft \hspace{6pt} {\fontsize{12pt}{14.4pt}\selectfont 0.280 ***} \hspace{6pt}\huxbpad{6pt}} &
@@ -591,12 +850,6 @@ sufficient specification tests to establish whether you are
 overidentifying your instrument set or whether the IVs shift the
 estimates enough to indicate that OLS would be inconsistent.
 
-\begin{figure}[htbp]
-\centering
-\includegraphics{Tex/conclusion.jpg}
-\caption{\label{con}}
-\end{figure}
-
 \newpage
 
 \hypertarget{references}{%
@@ -605,10 +858,22 @@ estimates enough to indicate that OLS would be inconsistent.
 
 \hypertarget{refs}{}
 \begin{CSLReferences}{1}{0}
+\leavevmode\hypertarget{ref-nids5}{}%
+Brophy, T., Branson, N., Daniels, R.C., Leibbrandt, M., Mlatsheni, C. \&
+Woolard, I. 2018. \emph{National income dynamics study panel user
+manual}. (Release 2018. Version 1). Cape Town: Southern Africa Labour;
+Development Research Unit; Southern Africa Labour; Development Research
+Unit.
+
 \leavevmode\hypertarget{ref-hertz}{}%
 Hertz, T. 2003. Upward bias in the estimated returns to education:
 Evidence from south africa. \emph{American Economic Review}.
 93(4):1354--1368.
+
+\leavevmode\hypertarget{ref-ang}{}%
+Imbens, G.W. \& Angrist, J.D. 1994. Identification and estimation of
+local average treatment effects. \emph{Econometrica}. 62(2):467--475.
+{[}Online{]}, Available: \url{http://www.jstor.org/stable/2951620}.
 
 \leavevmode\hypertarget{ref-isco}{}%
 \emph{International standard classification of occupations: Structure,
@@ -620,13 +885,45 @@ Katzke, N.F. 2017. \emph{{Texevier}: {P}ackage to create elsevier
 templates for rmarkdown}. Stellenbosch, South Africa: Bureau for
 Economic Research.
 
+\leavevmode\hypertarget{ref-return}{}%
+Koop, G. \& Tobias, J.L. 2004. Learning about heterogeneity in returns
+to schooling. \emph{Journal of Applied Econometrics}. 19(7):827--849.
+{[}Online{]}, Available: \url{http://www.jstor.org/stable/25146329}.
+
 \leavevmode\hypertarget{ref-disc}{}%
 Lang, K. 1993. \emph{Ability bias, discount rate bias and the return to
 education}. (MPRA Paper). University Library of Munich, Germany.
 {[}Online{]}, Available:
 \url{https://EconPapers.repec.org/RePEc:pra:mprapa:24651}.
 
+\leavevmode\hypertarget{ref-mince}{}%
+Mincer, J. 1974. \emph{Schooling, experience and earnings}. National
+Bureau of Economics, New York: Columbia University Press.
+
+\leavevmode\hypertarget{ref-nids}{}%
+\emph{National income dynamics study 2017, wave 5 dataset}. 2018. Cape
+Town, South Africa: Department of Planning, Monitoring,; Evaluation
+{[}funding agency{]} \& DataFirst {[}distributor{]}. {[}Online{]},
+Available: \url{https://doi.org/10.25828/fw3h-v708}.
+
+\leavevmode\hypertarget{ref-metrics}{}%
+Stock, J. H. \& Watson, M.W. 2015. \emph{Introduction to econometrics,
+third update, global edition}. Pearson Education Limited.
+
+\leavevmode\hypertarget{ref-metrics1}{}%
+Venables, W.N. \& Smith, D.M. 2010. \emph{{R-Intro}: {A}n introduction
+to r}. {[}Online{]}, Available:
+\url{https://cran.r-project.org/doc/manuals/r-release/R-intro.pdf}.
+
+\leavevmode\hypertarget{ref-nids1}{}%
+Villiers, L. de, Leibbrandt, M. \& Woolard, I. 2009. \emph{Methodology:
+Report on NIDS wave 1}. (Technical Paper no. 1). Cape Town: Southern
+Africa Labour; Development Research Unit; Southern Africa Labour;
+Development Research Unit.
+
 \end{CSLReferences}
+
+\newpage
 
 \hypertarget{appendix}{%
 \section*{Appendix}\label{appendix}}
