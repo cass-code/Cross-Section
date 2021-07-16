@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.23 (TeX Live 2021/W32TeX) (preloaded format=pdflatex 2021.7.14)  15 JUL 2021 23:01
+This is pdfTeX, Version 3.141592653-2.6-1.40.23 (TeX Live 2021/W32TeX) (preloaded format=pdflatex 2021.7.14)  16 JUL 2021 03:51
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -767,6 +767,9 @@ LaTeX Warning: Label `Figure1' multiply defined.
 
 LaTeX Warning: Label `results' multiply defined.
 
+
+LaTeX Warning: Label `conclusion' multiply defined.
+
 )
 \openout1 = `20346212CSproj.aux'.
 
@@ -861,11 +864,11 @@ Package caption Info: Begin \AtBeginDocument code.
 Package caption Info: threeparttable package is loaded.
 Package caption Info: wrapfig package is loaded.
 Package caption Info: End \AtBeginDocument code.
-<Tex/logo.jpeg, id=48, 308.352pt x 148.6353pt>
+<Tex/logo.jpeg, id=44, 308.352pt x 148.6353pt>
 File: Tex/logo.jpeg Graphic file (type jpg)
 <use Tex/logo.jpeg>
 Package pdftex.def Info: Tex/logo.jpeg  used on input line 198.
-(pdftex.def)             Requested size: 326.30098pt x 157.28957pt.
+(pdftex.def)             Requested size: 362.55911pt x 174.76897pt.
 LaTeX Font Info:    Trying to load font information for OT1+lmr on input line 2
 18.
 (c:/Users/Cassandra/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/lm/ot1lmr.fd
@@ -917,73 +920,59 @@ dftex.map} <./Tex/logo.jpeg>] (./20346212CSproj.toc)
 
 ]
 LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <9> on input line 273.
+(Font)              <9> on input line 298.
 LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <5> on input line 273.
-<20346212CSproj_files/figure-latex/lineargraph-1.png, id=83, 433.62pt x 216.81p
+(Font)              <5> on input line 298.
+<20346212CSproj_files/figure-latex/lineargraph-1.png, id=87, 433.62pt x 216.81p
 t>
 File: 20346212CSproj_files/figure-latex/lineargraph-1.png Graphic file (type pn
 g)
 <use 20346212CSproj_files/figure-latex/lineargraph-1.png>
 Package pdftex.def Info: 20346212CSproj_files/figure-latex/lineargraph-1.png  u
-sed on input line 315.
+sed on input line 316.
 (pdftex.def)             Requested size: 433.61894pt x 216.80946pt.
-[3]
-<20346212CSproj_files/figure-latex/racegraph-1.png, id=96, 433.62pt x 216.81pt>
+<20346212CSproj_files/figure-latex/racegraph-1.png, id=88, 433.62pt x 216.81pt>
 
 File: 20346212CSproj_files/figure-latex/racegraph-1.png Graphic file (type png)
 
 <use 20346212CSproj_files/figure-latex/racegraph-1.png>
 Package pdftex.def Info: 20346212CSproj_files/figure-latex/racegraph-1.png  use
-d on input line 324.
+d on input line 325.
 (pdftex.def)             Requested size: 433.61894pt x 216.80946pt.
+[3 <./20346212CSproj_files/figure-latex/lineargraph-1.png>]
 LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <14> on input line 574.
+(Font)              <14> on input line 552.
 LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <10> on input line 574.
-[4 <./20346212CSproj_files/figure-latex/lineargraph-1.png> <./20346212CSproj_fi
-les/figure-latex/racegraph-1.png>]
-
-LaTeX Warning: Reference `Figure2' on page 5 undefined on input line 587.
-
-
-LaTeX Warning: Reference `Figure2' on page 5 undefined on input line 588.
-
-[5]
-
-LaTeX Warning: Reference `tab1' on page 6 undefined on input line 597.
-
-<Tex/conclusion.jpg, id=125, 1592.95125pt x 1592.95125pt>
+(Font)              <10> on input line 552.
+[4 <./20346212CSproj_files/figure-latex/racegraph-1.png>] [5]
+<Tex/conclusion.jpg, id=129, 1592.95125pt x 1592.95125pt>
 File: Tex/conclusion.jpg Graphic file (type jpg)
 <use Tex/conclusion.jpg>
-Package pdftex.def Info: Tex/conclusion.jpg  used on input line 614.
+Package pdftex.def Info: Tex/conclusion.jpg  used on input line 596.
 (pdftex.def)             Requested size: 1592.94737pt x 1592.94737pt.
 
-Overfull \hbox (1109.53522pt too wide) in paragraph at lines 614--615
+Overfull \hbox (1109.53522pt too wide) in paragraph at lines 596--597
  [][] 
  []
 
-[6] [7]
-Overfull \vbox (1009.01477pt too high) has occurred while \output is active []
+[6]
+Overfull \vbox (977.01477pt too high) has occurred while \output is active []
 
-[8 <./Tex/conclusion.jpg>]
+[7 <./Tex/conclusion.jpg>]
 No file 20346212CSproj.bbl.
-[9] (./20346212CSproj.aux)
-
-LaTeX Warning: There were undefined references.
-
+[8] (./20346212CSproj.aux)
 
 LaTeX Warning: There were multiply-defined labels.
 
 Package rerunfilecheck Info: File `20346212CSproj.out' has not changed.
-(rerunfilecheck)             Checksum: DE425A9DAC3AE815C096E681F7B6BAED;1095.
+(rerunfilecheck)             Checksum: 3D8ACF27DFE76AFFB6FC6E9D5156ABC3;1024.
  ) 
 Here is how much of TeX's memory you used:
- 16525 strings out of 480502
- 291291 string characters out of 5897745
- 603778 words of memory out of 5000000
- 33856 multiletter control sequences out of 15000+600000
- 470649 words of font info for 77 fonts, out of 8000000 for 9000
+ 16520 strings out of 480502
+ 291250 string characters out of 5897745
+ 601806 words of memory out of 5000000
+ 33853 multiletter control sequences out of 15000+600000
+ 473647 words of font info for 78 fonts, out of 8000000 for 9000
  14 hyphenation exceptions out of 8191
  72i,15n,80p,282b,758s stack positions out of 5000i,500n,10000p,200000b,80000s
 {c:/Users/Cassandra/AppData/Roaming/TinyTeX/texmf-dist/fonts/enc/dvips/lm/lm-
@@ -1000,10 +989,10 @@ sers/Cassandra/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/public/lm/lmr8.pf
 b><c:/Users/Cassandra/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/public/lm/
 lmr9.pfb><c:/Users/Cassandra/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/pub
 lic/lm/lmri10.pfb>
-Output written on 20346212CSproj.pdf (9 pages, 771030 bytes).
+Output written on 20346212CSproj.pdf (8 pages, 774763 bytes).
 PDF statistics:
- 211 PDF objects out of 1000 (max. 8388607)
- 172 compressed objects within 2 object streams
- 42 named destinations out of 1000 (max. 500000)
- 109 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 209 PDF objects out of 1000 (max. 8388607)
+ 171 compressed objects within 2 object streams
+ 41 named destinations out of 1000 (max. 500000)
+ 101 words of extra memory for PDF output out of 10000 (max. 10000000)
 

@@ -92,7 +92,7 @@ output:
     fig_width: 3.5 # Adjust default figure sizes. This can also be done in the chunks of the text.
     fig_height: 3.5
 # abstract: |
-#   Abstract to be written here. The abstract should not be too long and should provide the reader with a good understanding what you are writing about. Academic papers are not like novels where you keep the reader in suspense. To be effective in getting others to read your paper, be as open and concise about your findings here as possible. Ideally, upon reading your abstract, the reader should feel he / she must read your paper in entirety.
+#   This essay estimates the return to education using four different instrumental variable estimators: the first two exploit parents' education, and the other two use parents' occupation. These instruments estimate a ‘local average treatment effect’, which is more appropriate than OLS estimators for analysing the returns to education for South Africa. These instruments are implemented on the NIDS Wave 5 data set. Specification tests reveal that all four instruments are valid and strong. The results show that the OLS estimates are downwardly biased compared with the IV estimates.
 ---
 
 <!-- First: Set your default preferences for chunk options: -->
@@ -103,55 +103,32 @@ output:
 knitr::opts_chunk$set(echo = FALSE, message = FALSE, warning = FALSE, fig.width = 6, fig.height = 5, fig.pos="H", fig.pos = 'H')
 if(!require("tidyverse")) install.packages("tidyverse")
 library(tidyverse)
+library(haven)
+library(ivreg)
+library(ggplot2)
+#read in nids
 data <- read_dta("data/Adult_W5_Anon_V1.0.0.dta")
+
 
 ```
 
-
+\newpage
 <!-- ############################## -->
 <!-- # Start Writing here: -->
 <!-- ############################## -->
-\newpage
 
 # Introduction \label{Introduction}
 
-This paper estimates the return to education using two alternative instrumental variable
-estimators: one exploits variation in schooling associated with early smoking behaviour, the
-other uses the raising of the minimum school leaving age. Each instrument estimates a ‘local
-average treatment effect’ and my motivation is to analyse the extent to which these differ and
-which is more appropriate for drawing conclusions about the return to education in Britain. I
-implement each instrument on the same data from the British Household Panel Survey, and
-use the over-identification to test the validity of my instruments. I find that the instrument
-constructed using early smoking behaviour is valid as well as being strong, and argue that it
-provides a better estimate of the average effect of additional education, akin to ordinary least
-squares but corrected for endogeneity. I also exploit the dual sources of exogenous variation
-in schooling to derive a further IV estimate of the return to schooling. I find the OLS estimate
-to be considerably downward biased (around 4.6%) compared with the IV estimates of 12.9%
-(early smoking), 10.2% (RoSLA) and 12.5% (both instruments). 
+The return to education is a cornerstone topic in labour economics and is of particular interest to policymakers. This is no different in South Africa, especially given the significant income inequality, which is often claimed to be strongly linked to differences in education. However, wages cannot simply be regressed on education because there is likely endogeneity present. This arises from the problem of there being an omitted variable, where education and wages are both correlated with a variable in the error term. One variable of this nature that has been extensively studied is innate ability (@hertz). Returns to schooling could be biased upwards if ability is positively correlated with both income and education. However, as @disc assesses, the overall findings of research on the impact of ability bias are inconclusive. In fact, @disc [p.1] notes that several papers find that returns to education are _downwardly_ biased. 
 
-
-This essay^[This essay was written in R using the Texevier package by @Texevier] is structured as follows: section \ref{data} details the data set used and discusses the descriptive statistics. Section \ref{meth} outlines the methodology and argues that the LATE assumptions for the instrumental variables hold. Following this, section \ref{results} presents the regression results and evaluates the robustness of the estimators used to obtain a causal effect. The final section, \ref{conclusion], concludes.
-
-@disc
-You may suggest any application using one or a combination of techniques that we have learnt
-in this course. You should NOT write an extensive essay about the topic of interest, nor should you conduct
-an extensive literature review behind it: you should only reference articles that support the
-motivation for your econometric strategy (in the quest of finding a causal interpretation of a
-relationship that you are modeling).
-Provide descriptive statistics and graphs to aid in your discussion.
-The assignment should be between 3-6 pages, including your tables and figures.
-
-You are required to go beyond simply estimating and presenting your results, but to convince
-the reader of their robustness by presenting alternative specifications. You should apply different estimators and specifications where possible. Discuss the shortcomings of the estimators in obtaining a causal effect and argue why your
-strategy is the best available to obtain a causal effect that satisfies relevant assumptions.
-
-Determine an effect of interest and find instrumental variables to estimate it causally. If possible, use more than one instrument. Given the LATE assumptions, try and explain why your results differ and which is likely to
-represent the causal effect you are looking for. Conduct sufficient specification tests to establish whether you are overidentifying your instrument set or whether the IVs shift the estimates enough to indicate that OLS would be inconsistent.
+This paper will investigate whether OLS estimates are biased in the South African case by estimating the return to education using four different instrumental variable estimators: the first two exploit parents' education, and the other two use parents' occupations. These instruments estimate a ‘local average treatment effect’, which - this paper will argue - is more appropriate than OLS estimators for analysing the returns to education for South Africa. These instruments are tested for strength and validity and then implemented on the NIDS Wave 5 data set. This essay^[This essay was written in R using the Texevier package by @Texevier] is structured as follows: section \ref{data} details the data set used and discusses the descriptive statistics. Section \ref{meth} outlines the methodology and argues that the LATE assumptions for the instrumental variables hold. Following this, section \ref{results} presents the regression results and evaluates the robustness of the estimators used to obtain a causal effect. The final section, \ref{conclusion}, concludes.
 
 # Data \label{data}
 
-mention survey design for NIDS
+mention survey design for NIDS @nids
 @isco for occupation classification
+
+\ref{Figure1} gives a quick snapshot of the relationship between income and education. We can see that income and education are positively correlated, which is what we expect. We can  
 
 ```{r lineargraph,  warning =  FALSE, fig.align = 'center', fig.cap = "Income and Education Relationship \\label{Figure1}", fig.ext = 'png', fig.height = 3, fig.width = 6}
 
@@ -203,26 +180,33 @@ This project makes use of 4 different instrument variables: fathers occupation, 
 # Results \label{results}
 
 ## Specification Tests
-```{r regression1,  warning =  FALSE, fig.align = 'center', fig.cap = "Regressions: Father Education Instrument \\label{reg1}", fig.ext = 'png', fig.height = 3, fig.width = 6, results = 'asis'}
+
+
+```{r regression1,  echo=FALSE, warning =  FALSE,message= FALSE, fig.align = 'center', fig.cap = "Regressions with log(income) as the dependent variable \\label{reg1}", fig.ext = 'png', fig.height = 3, fig.width = 6, results='asis'}
 library(haven)
 library(ivreg)
 
 list.files('code/', full.names = T, recursive = T) %>% as.list() %>% walk(~source(.))
-data <- read_dta("data/Adult_W5_Anon_V1.0.0.dta")
 #w4 <- read_dta("data/Adult_W4_Anon_V2.0.0.dta")
 
-dfiv <- iv1_clean(data)
-lm1 <-lm(income ~ age+ age2+ school + tertiary, dfiv)
-lm2 <-lm(income ~ age+ age2+ school+tertiary + race + gender, dfiv)
+d1 <- iv_father(data)
+d2 <- iv_mother(data)
+d3 <- f_occ(data)
+d4 <- m_occ(data)
 
-iv1 <- ivreg(income ~ age + age2 | school + tertiary | father_schl + father_tert, data = dfiv)
-iv2 <- ivreg(income ~ age + age2 + race + gender| school + tertiary | father_schl + father_tert, data = dfiv)
+lm1 <-lm(income ~ age+ age2+ education + race + gender, d1)
+
+iv1 <- ivreg(income ~ age + age2 + race + gender| education | father_ed, data = d1)
+iv2 <- ivreg(income ~ age + age2 + race + gender| education | mother_ed, data = d2)
+iv3 <- ivreg(income ~ age + age2 + race + gender| education | father_occ, data = d3)
+iv4 <- ivreg(income ~ age + age2 + race + gender| education | mother_occ, data = d4)
 
 library(huxtable)
-Title <- "Regressions: Father Education Instrument"
+Title <- "Regressions: Father's Education as Instrument"
 Label <- "reg1"
 htab <-
-huxreg("OLS 1" = lm1, "2SLS 1" = iv1, "OLS 2" = lm2,  "2SLS 2" = iv2,
+huxreg("OLS" = lm1, "2SLS FE" = iv1, "2SLS ME" = iv2, "2SLS FO" = iv3, "2SLS MO" = iv4,
+                coefs = c("age" = "age", "age2" = "age2", "education" = "education", "Coloured" = "raceColoured", "Asian/Indian" = "raceAsian/Indian", "White" = "raceWhite", "Male" = "genderMale" ),
                 statistics = c(N = "nobs", R2 = "r.squared"),
                 note = "%stars%.") %>%
   set_caption(Title) %>%
@@ -231,85 +215,6 @@ font_size(htab) <- 12
 htab
 
 ```
-
-```{r regression2,  warning =  FALSE, fig.align = 'center', fig.cap = "Regressions: Mother Education Instrument \\label{reg2}", fig.ext = 'png', fig.height = 3, fig.width = 6, results = 'asis'}
-library(haven)
-library(ivreg)
-
-list.files('code/', full.names = T, recursive = T) %>% as.list() %>% walk(~source(.))
-data <- read_dta("data/Adult_W5_Anon_V1.0.0.dta")
-
-dfiv <- iv_mother(data)
-# lm1 <-lm(income ~ age+ age2+ school + tertiary, dfiv)
-# lm2 <-lm(income ~ age+ age2+ school+tertiary + race + gender, dfiv)
-lm1 <-lm(income ~ age+ age2+ education, dfiv)
-lm2 <-lm(income ~ age+ age2+ education + race + gender, dfiv)
-
-#iv1 <- ivreg(income ~ age + age2 | school + tertiary | mother_schl + mother_tert, data = dfiv)
-iv1 <- ivreg(income ~ age + age2 | education | mother_ed, data = dfiv)
-iv2 <- ivreg(income ~ age + age2 + race + gender| education | mother_ed, data = dfiv)
-#iv2 <- ivreg(income ~ age + age2 + race + gender| school + tertiary | mother_schl + mother_tert, data = dfiv)
-
-library(huxtable)
-Title <- "Regressions: Mother Education Instrument"
-Label <- "reg2"
-htab <-
-huxreg("OLS 1" = lm1, "2SLS 1" = iv1, "OLS 2" = lm2, "2SLS 2" = iv2,
-                statistics = c(N = "nobs", R2 = "r.squared"),
-                note = "%stars%.") %>%
-  set_caption(Title) %>%
-  set_label(Label)
-font_size(htab) <- 12
-htab
-
-```
-
-
-```{r regression3,  warning =  FALSE, fig.align = 'center', fig.cap = "Regressions: Mother Occupation Instrument \\label{reg3}", fig.ext = 'png', fig.height = 3, fig.width = 6, results = 'asis'}
-library(haven)
-library(ivreg)
-
-list.files('code/', full.names = T, recursive = T) %>% as.list() %>% walk(~source(.))
-data <- read_dta("data/Adult_W5_Anon_V1.0.0.dta")
-
-dfiv <- mother_occ(data)
-# lm1 <-lm(income ~ age+ age2+ school + tertiary, dfiv)
-# lm2 <-lm(income ~ age+ age2+ school+tertiary + race + gender, dfiv)
-lm1 <-lm(income ~ age+ age2+ education, dfiv)
-lm2 <-lm(income ~ age+ age2+ education + race + gender, dfiv)
-
-#iv1 <- ivreg(income ~ age + age2 | school + tertiary | mother_schl + mother_tert, data = dfiv)
-iv1 <- ivreg(income ~ age + age2 | education | mother_occ, data = dfiv)
-iv2 <- ivreg(income ~ age + age2 + race + gender| education | mother_occ, data = dfiv)
-#iv2 <- ivreg(income ~ age + age2 + race + gender| school + tertiary | mother_schl + mother_tert, data = dfiv)
-
-library(huxtable)
-Title <- "Regressions: Mother's Occupation as Instrument"
-Label <- "reg3"
-htab <-
-huxreg("OLS 1" = lm1, "2SLS 1" = iv1, "OLS 2" = lm2, "2SLS 2" = iv2,
-                statistics = c(N = "nobs", R2 = "r.squared"),
-                note = "%stars%.") %>%
-  set_caption(Title) %>%
-  set_label(Label)
-font_size(htab) <- 12
-htab
-
-```
-
-
-```{r Figure2, include = FALSE, warning =  FALSE, fig.align = 'center', fig.cap = "Caption Here \\label{Figure2}", fig.height = 3, fig.width = 6, dev = 'png'}
-
-
-
-```
-
-To reference the plot above, add a ``\\label'' after the caption in the chunk heading, as done above. Then reference the plot as such: As can be seen, Figures \ref{Figure1}  and \ref{Figure2} are excellent, with Figure \ref{Figure2} being particularly aesthetically pleasing due to its device setting of Tikz. The nice thing now is that it correctly numbers all your figures (and sections or tables) and will update if it moves. The links are also dynamic.
-
-
-
-# Results
-
 
 
 ```{r ShortTable, results = 'asis'}
@@ -360,12 +265,17 @@ wn possibly long tables. Note that the following will fit on one page if it can,
 # See https://cran.r-project.org/web/packages/xtable/vignettes/xtableGallery.pdf for table inspiration
 ```
 
-\hfill
-
-<!-- hfill can be used to create a space, like here between text and table. -->
-
-
 # Conclusion \label{conclusion}
+
+ You should NOT write an extensive essay about the topic of interest, nor should you conduct
+an extensive literature review behind it: you should only reference articles that support the
+motivation for your econometric strategy (in the quest of finding a causal interpretation of a relationship that you are modeling).
+Provide descriptive statistics and graphs to aid in your discussion.
+The assignment should be between 3-6 pages, including your tables and figures.
+
+You are required to go beyond simply estimating and presenting your results, but to convince the reader of their robustness by presenting alternative specifications. You should apply different estimators and specifications where possible. Discuss the shortcomings of the estimators in obtaining a causal effect and argue why your strategy is the best available to obtain a causal effect that satisfies relevant assumptions.
+
+Determine an effect of interest and find instrumental variables to estimate it causally. If possible, use more than one instrument. Given the LATE assumptions, try and explain why your results differ and which is likely to represent the causal effect you are looking for. Conduct sufficient specification tests to establish whether you are overidentifying your instrument set or whether the IVs shift the estimates enough to indicate that OLS would be inconsistent.
 
 \begin{figure}[htbp]
 \centering
