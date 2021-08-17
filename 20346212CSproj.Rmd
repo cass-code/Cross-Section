@@ -119,17 +119,17 @@ data <- read_dta("data/Adult_W5_Anon_V1.0.0.dta")
 
 The return to education is a cornerstone topic in labour economics and is of particular interest to policymakers. This is no different in South Africa, especially given the significant income inequality, which is often claimed to be strongly linked to differences in education. However, wages cannot simply be regressed on education because there is likely endogeneity present. This arises from the problem of there being an omitted variable, where education and wages are both correlated with a variable in the error term. One variable of this nature that has been extensively studied is innate ability (@hertz). Returns to schooling could be biased upwards if ability is positively correlated with both income and education. However, as @disc assesses, the overall findings of research on the impact of ability bias are inconclusive. In fact, @disc [p.1] notes that several papers find that returns to education are _downwardly_ biased. 
 
-This paper will investigate whether OLS estimates are biased in the South African case by estimating the return to education using four different instrumental variable estimators: the first two exploit parents' education, and the other two use parents' occupations. These instruments estimate a ‘local average treatment effect’, which - this paper will argue - is more appropriate than OLS estimators for analysing the returns to education for South Africa. These instruments are tested for strength and validity and then implemented on the NIDS Wave 5 data set. This essay^[This essay was written in R using the Texevier package by @Texevier] is structured as follows: section \ref{data} details the data set used and discusses the descriptive statistics. Section \ref{meth} outlines the methodology and argues that the LATE assumptions for the instrumental variables hold. Following this, section \ref{results} presents the regression results and evaluates the robustness of the estimators used to obtain a causal effect. The final section, \ref{conclusion}, concludes^[The code and write up for this project can be found on Github https://github.com/cass-code/Cross-Section.git].
+This paper will investigate whether OLS estimates are biased in the South African case by estimating the return to education using four different instrumental variable estimators: the first two exploit parents' education, and the other two use parents' occupations. These instruments estimate a ‘local average treatment effect’, which - this paper will argue - is more appropriate than OLS estimators for analysing the returns to education for South Africa, if certain assumptions are met. These instruments are tested for strength and validity and then implemented on the NIDS Wave 5 data set. This essay^[This essay was written in R using the Texevier package by @Texevier] is structured as follows: section \ref{data} details the data set used and discusses the descriptive statistics. Section \ref{meth} outlines the methodology and investigates whether the LATE assumptions for the instrumental variables hold. Following this, section \ref{results} discusses the regression results and evaluates the robustness of the estimators used to obtain a causal effect. The final section, \ref{conclusion}, concludes^[The code and write up for this project can be found on Github https://github.com/cass-code/Cross-Section.git].
 
 # Data \label{data}
 
-The data used for this paper is sourced from the National Income Dynamics Survey (NIDS) (@nids), which was the first national household panel study in South Africa. NIDS is an initiative of the Department of Planning, Monitoring and Evaluation, and the Southern Africa Labour and Development Research Unit (SALDRU) is tasked with implementation (@nids5). NIDS was started in 2008, interviewing over 28,000 people. These same people are then interviewed every two years. The latest survey is Wave 5 (2017), which is the data set used for the regression analysis, where the individual is the unit of observation. Wave 5 consists of 37,368 individuals, where the high rate of attrition among high-income, Indian/Asian, and White respondents has led to the sample being increased by 2,775 to maintain sample representativeness (@nids5).
+The data used for this paper is sourced from the National Income Dynamics Survey (NIDS) (@nids), which was the first national household panel study in South Africa. NIDS is an initiative of the Department of Planning, Monitoring and Evaluation, and the Southern Africa Labour and Development Research Unit (SALDRU) is tasked with its implementation (@nids5). NIDS was started in 2008, with over 28,000 people interviewed. These same people are then interviewed every two years. The latest survey is Wave 5 (2017), which is the data set used for the regression analysis, where the individual is the unit of observation. Wave 5 consists of 37,368 individuals, where the high rate of attrition among high-income, Indian/Asian, and White respondents has led to the sample being increased by 2,775 to maintain sample representativeness (@nids5).
 
-@nids1 outlays the design of the survey. To sample the households used in Wave 1, two-stage cluster sample design with stratification was employed. Stage 1 involved selecting 400 Primary Sampling Units, based on Statistics South Africa's Master Sample of 300 Primary Sampling Units (2003). Private households in all of South Africa's 9 provinces are the target population for NIDS. The 53 disctrict councils make up the explicit strata in the Master sample. Based on the allocation of the district councils in the Primary Sampling Units in the Master Sample, the sample was proportionally allocated and the Primary Sampling Units were randomly chosen within the strata (@nids1 p.9). Fieldworkers are assigned to the selected addresses and are instructed to interview all households living at the dwelling unit.
+@nids1 outlay the design of the survey. To sample the households used in Wave 1, two-stage cluster sample design with stratification was employed. Stage 1 involved selecting 400 Primary Sampling Units, based on Statistics South Africa's Master Sample of Primary Sampling Units (2003). Private households in all of South Africa's 9 provinces are the target population for NIDS. The 53 disctrict councils make up the explicit strata in the Master sample. Based on the allocation of the district councils in the Primary Sampling Units in the Master Sample, the sample was proportionally allocated and the Primary Sampling Units were randomly chosen within the strata (@nids1 p.9). Fieldworkers are assigned to the selected addresses and are instructed to interview all households living at the dwelling unit.
 
 The NIDS wave 5 data set contains 30,110 observations of 1,144 variables. As a part of the data cleaning process, I selected 14 variables: year of birth, gender, race, income, marital status, highest level of schooling, highest level of tertiary education, union status, father's schooling, father's tertiary education, father's occupation, mother's schooling, mother's tertiary education, and mother's occupation. The occupation variables have been re-coded with the appropriate profession names from the @isco, and are therefore categorical variables. I constructed the variables age and age-squared from the year of birth, and I constructed an education variable, which represents the number of years of education for an individual (i.e. summing the years of schooling and years of tertiary education). I constructed a similar variable for mother and father's education. Unfortunately, there are a significant number of missing observations for the variables income, parents' education, marital status and union status. Because of this, the sample size for the regressions is reduced to 3,300 and under.  
 
-As a part of the initial data exploration, figure \ref{Figure1} gives a quick snapshot of the relationship between income and education. As shown by the black regression line, income and education are positively correlated, which is what we expect. Section \ref{results} will argue that this is a causal relationship. We can also glimpse how education and income is distributed in the sample. To get a clearer view of the race distribution, figure \ref{Figure2} shows a bar plot of the four main race groups in South Africa: African, Asian/Indian, Coloured and White. The graph shows the sample is roughly representative of the South African population, with a slightly smaller sample of Coloured and White individuals (despite the top up sample). We also want to check that income is normally distributed to combat heteroskedasticity in the regression analysis. We find that the income distribution is skewed but log of income is fairly normal, as figure \ref{Figure3} shows. This indicates that log of income should be the dependent variable in the regressions (rather the linear form of income), which is also supported by the literature.
+As a part of the initial data exploration, figure \ref{Figure1} gives a quick snapshot of the relationship between income and education. As shown by the black regression line, income and education are positively correlated, which is what we expect. Section \ref{results} will argue that this is a causal relationship. We can also glimpse how education and income are distributed in the sample. To get a clearer view of the race distribution, figure \ref{Figure2} shows a bar plot of the four main race groups in South Africa: African, Asian/Indian, Coloured and White. The graph shows the sample is roughly representative of the South African population, with a slightly smaller sample of Asian/Indian and White individuals (despite the top up sample). We also want to check that income is normally distributed to combat heteroskedasticity in the regression analysis. We find that the income distribution is skewed but log of income is fairly normal, as figure \ref{Figure3} shows. This indicates that log of income should be the dependent variable in the regressions (rather the linear form of income), which is also supported by the literature.
 
 
 ```{r lineargraph,  warning =  FALSE, fig.align = 'center', fig.cap = "Income and Education Relationship \\label{Figure1}", fig.ext = 'png', fig.height = 2.2, fig.width = 5}
@@ -202,9 +202,42 @@ Log(income)=\beta_{0}+\beta_{1} X_{1}+\cdots+\beta_{k} X_{k}+u  \label{eq1}
 \end{align}
 where $X_{1}$ is education and $\ldots, X_{k}$ includes the other regressors: age, age-squared, race and gender, $\beta_{0}, \ldots, \beta_{k}$ are the regression coefficients, and $u$ is the error term. Race is a categorical variable with the reference group as African, and gender is a dummy variable that takes a value of 1 if an individual is male and 0 otherwise.
 
-If education is an endogenous regressor - i.e. correlated with the error term - then the OLS coefficient for education ($\beta_{1}$) will be biased (@R). If we can find an instrumental variable for education, then we can remove this endogeneity and get an unbiased coefficient for education (@metrics & @metrics1). 4 different variables are used as an instrument for an individual's education: fathers education, mother's education, father's occupation and mother's occupation. In order to use these variables as instruments, we have to check their validity(@ang). Economic theory and the literature suggests that returns to schooling are heterogeneous (@return [p.827-828]), which implies that for the instruments to be valid they have to comply with the Local Average Treatment Effects (LATE) identifying assumptions. The four LATE assumptions are: independence, random assignment, exclusion restriction, and monotonicity. The first section below, ref\{spec}, interprets the diagnostic tests for instrument variables and the second part, ref\{late}, evaluates whether the LATE assumptions hold for the instrument variables.
+If education is an endogenous regressor - i.e. correlated with the error term - then the OLS coefficient for education ($\beta_{1}$) will be biased (@R). If we can find an instrumental variable for education, then we can remove this endogeneity and get an unbiased coefficient for education (@metrics & @metrics1). 4 different variables are used as an instrument for an individual's education: father's education, mother's education, father's occupation and mother's occupation. In order to use these variables as instruments, we have to check their validity (@ang). Economic theory and the literature suggests that returns to schooling are heterogeneous (@return [p.827-828]), which implies that for the instruments to be valid they have to comply with the Local Average Treatment Effects (LATE) identifying assumptions. The four LATE assumptions are: relevance, monotonicity, random assignment and exclusion restriction.  The section below, \ref{spec}, interprets the diagnostic tests for the instrument variables and evaluates whether the LATE assumptions hold.
  
-## Specification Tests \label{spec}
+## Specification Tests and LATE Assumptions\label{spec}
+
+The relevance assumption is directly testable on the data, for which we can use the 'Weak Instrument' test. The results of the specification tests in the appendix, \ref{appendixA}, show that all four instruments are not weak instruments. The null hypothesis for the 'Weak Instrument' test is that the instrument is weak. The p-values for each of the individual tests are zero, which rejects the null hypothesis. This supports the relevance assumption and these instruments affect treatment for at least some individuals. This makes intuitive sense as well: if an individual was on the fence about studying further, and his/her parents studied further, the parents are likely to convince that individual to follow in their footsteps/take the "safe" option of studying further.
+
+The Wu-Hausman test evaluates whether the OLS and instrumental variable regressions give significantly different estimates. The null hypothesis is that the estimated coefficients of OLS and IV regression are not statistically different from one another. For all four instruments, the null hypothesis is rejected, which means the OLS and IV estimates are sufficiently different from one another. The Sargan test is applicable when the number of instruments exceeds the number of endogenous variables. Rejecting the null of the Sargan test implies that the instruments are invalid. For father's occupation and mother's occupation, the Sargan test fails to reject the null, thus all the instrumental variables are valid. 
+
+Regarding the assumption of monotonicity: it seems unlikely that someone who would have pursued education further would decide not to because either of his/her parents pursued education further. Thus, it is reasonable to conclude that the monotonicity assumption holds for father's and mother's education (i.e. there are no defiers). Similarly, it seems unreasonable that someone who would have pursued education further would decide not to due to his/her parents' occupation. Although, one could argue that: if an individual would have liked to study further, but doesn't want the pressure of living up to his/her parents' academic achievements and so opts out, the monotonicity assumption is invalid. However, this is unlikely to occur for the majority of the sample and can be ignored.
+
+The random assignment assumption is difficult to argue for, since the distribution of potential outcomes and potential take-up values should look same for those whose parents studied further and for those whose didn't, when in reality the distribution doesn't look the same. We would expect individuals whose parents have lower levels of education to have different potential earnings distributions or potential take-up probabilities than individuals whose parents have higher levels of education. Similarly for individual's whose parents have different occupations. In South Africa, networks play a large role in employment opportunities and therefore play a role in earning potentials. The earnings' potential of an individual changes depending on their connections and their parents' connections, which is correlated to parental occupation; this is a violation of the exclusion restriction.
+
+The exclusion restriction assumption is broken if an individual's parents' education affects his/her potential earnings through another variable other than education. This is possible, for example, through socioeconomic standing. If an individual's parents' education/occupation is correlated with their being wealthy and well-connected, and having wealthy and well-connected parents increases earning potential (they could provide financial and social capital for business ventures) then the exclusion restriction assumption no longer holds. However, according to @block, violations of the strict validity assumption does not necessarily lead to results which differ significantly from those of the strict validity case. @block make the case that family background variables can be used as instruments for regressions involving income. The next section \ref{results} discusses the results of the ordinary least squares regression (OLS) compared to the instrumental variable (IV )regressions.
+
+# Results \label{results}
+
+Table \ref{FE} in the appendix (\ref{appendix}) presents the regression results, and the figure below it plots the regression coefficients with their 95% confidence intervals. The OLS regression regresses log income on education, controlling for age, race, and gender. The coefficients of the control variables have the expected signs and most are statistically significant at 1%. The coefficient for education is 0.194, which implies that a 1 unit (a year) increase in education is associated with a 21,4% increase in income, ceteris paribus. However, in order to show there exists a causal relationship between education and income, and that there exists bias in the OLS estimate, two-stage least squares (2SLS) was applied using the 4 different instrumental variables.
+
+The first 2SLS regression employs father's education as an instrument for education (2SLS FE in \ref{reg1}). The coefficient for this regression is 0.309, which is significantly higher than the OLS estimate. This implies that the OLS estimate is bias downwards. The second IV regression uses mother's education as an instrument for education (2SLS ME in \ref{reg1}). The coefficient for education here is 0.280; again this is a lot higher than the OLS estimate. The third and fourth 2SLS regressions that exploit father's and mother's occupation as instrument variables for education (2SLS FO, 2SLS MO in \ref{reg1}) show similar results. They estimate the coefficient for education to be 0.327 and 0.387 respectively. However, the sample size diminishes when using occupation as a variable, which makes them less statistically trustworthy than the other estimates. This is illustrated clearly by the large confidence bands for 'FO' and 'MO' in the figure in the appendix \ref{reg1}. Overall, the IV regression results show that the OLS estimate is substantially downwards biased. These findings are similar to those of @agree, who also show that returns to education are underreported by OLS regressions.
+
+However, it is important to recognize that the 2SLS estimators recover local average treatment effects (LATE) whereas OLS estimators recover average treatment effects. In the IV regressions, the effect of further education is only captured for those individuals who are more likely to further their education because their parents pursued education further. This empirical stance does not provide information about the effect of studying further among people would have always studied further or never studied further, regardless of their parents' education/occupations.
+
+
+# Conclusion \label{conclusion}
+
+This essay set out to show that there is a causal link between education and income using four different instrumental variables. The OLS regression finds that education has a positive coefficient, as expected, but the four 2SLS regressions indicate that OLS may be underestimating the returns to education. The fact that all four 2SLS regressions show higher education estimates suggests the results are robust, and the instrumental variables shift the estimate enough to indicate that OLS would be inconsistent. Although some of the LATE assumptions may be violated by selecting parents' education and occupations as instrumental variables, they may still be viable tools to introduce exogeneity into the model (@block). Further robustness checks could be conducted by including more controls in the regressions (such as marital status and union status^[I ran these regressions and found similar results; however the sample sizes were very small]), using fixed effects to control for time invariant unobservables or using education lagged as an instrument variable.
+
+\newpage
+
+# References {-}
+
+<div id="refs"></div>
+
+\newpage
+# Appendix A: Specification Tests \label{appendixA} {-} 
+
 
 ```{r Specification,  echo=FALSE, warning =  FALSE,message= FALSE, fig.align = 'center', fig.cap = "Specification Tests \\label{spec1}", fig.ext = 'png', fig.height = 3, fig.width = 6, results='asis'}
 library(ivreg)
@@ -236,83 +269,22 @@ kab3<- kable(tab3$diagnostics, caption = "Specification Tests for Father's Occup
 tab4 <- summary(iv4, vcov = sandwich, diagnostics = TRUE)
 kab4 <- kable(tab4$diagnostics, caption = "Specification Tests for Mother's Occupation \\label{MO}")
 
-kab1 
+kab1
 kab2
-kab3 
-kab4 
+kab3
+kab4
+# a <- kable(
+#   list(tab1$diagnostics, tab2$diagnostics, tab3$diagnostics, tab4$diagnostics),
+#   caption = "Specification Tests for Father's and Mother's Education and Occupation \\label{spec1}",
+#   booktabs = TRUE, valign = 't'
+# )
+# 
+# a
+
 
 ```
 
-## LATE Assumptions \label{late}
-
-
-If our instrument is:
-1. randomly assigned
-2. only affects our outcome through its effect on our endogenous variable
-3. has a significant impact on take-up of treatment, and
-4. does not deter anyone from treatment
-
-Random Assignment:
-Random assignment of draft eligibility means independence assumption is very convincing.
-Would not expect individuals who were born on low-lottery days to have different potential earnings distributions or potential take-up probabilities than high-lottery individuals.
-
-Exclusion restriction:
-More reason to be concerned.
-Draft eligible men were allowed to defer their military service if they wanted to proceed with their studies.
-If some men decided to get more schooling because they had low lottery numbers and did not want to serve in the military, then this could have affected earnings via education attainment rather than via military service.
-
-Monotonicity:
-It seemse unlikely that someone who would have pursued education further would decide not to because either of his/her parent pursued education further. Thus, it's reasonable to conclude that the monotonicity assumption holds (i.e. there are no defiers). Similarly
-
-
-Is it possible that someone would have volunteered for the army (if draft ineligible) but decided not to because of draft eligibility? Seems unlikely.
-
-The relevance assumption is testable and table ref\{reg5} shows that both parents' education is correlated with education (and the coefficients are statistically significant at a 1% level). This means these instruments affect treatment for at least some individuals. The regression of education on parents' occupation shows that joint effect of the occupation types are significant. The p-values associated with the F-test for each regression are presented in \ref{tab}. The p-values are essentially 0 and thus reject the null hypothesis that the joint effect is zero. From an intuitive stand point, if an individual's parents pursued more years of education, 
-
-Are there individuals who would not have gone to war if they didn’t get picked, but ended up going just because they were eligible? Seems plausible. 
-
-```{r, echo=FALSE, warning =  FALSE,message= FALSE, fig.align = 'center', fig.cap = "Relevance of Instruments \\label{reg5}", fig.ext = 'png', fig.height = 3, fig.width = 6, results='asis'}
-list.files('code/', full.names = T, recursive = T) %>% as.list() %>% walk(~source(.))
-d1 <- iv_father(data)
-d2 <- iv_mother(data)
-d3 <- f_occ(data)
-d4 <- m_occ(data)
-lm1 <-lm(education ~ father_ed, d1)
-lm2 <-lm(education ~ mother_ed, d2)
-lm3 <-lm(education ~ father_occ, d3)
-lm4 <-lm(education ~ mother_occ, d4)
-
-
-library(huxtable)
-Title <- "Regressions: Instrument Relevance"
-Label <- "reg5"
-htab <-
-huxreg("Education" = lm1, "Education" = lm2,
-                coefs = c("Father's Education" = "father_ed", "Mother's Education" = "mother_ed"),
-                statistics = c(N = "nobs", R2 = "r.squared"),
-                note = "%stars%.") %>%
-  set_caption(Title) %>%
-  set_label(Label)
-font_size(htab) <- 11
-htab
-
-m3 <- summary(lm3)
-m4 <- summary(lm4)
-
-F3 <- pf(m3$fstatistic[1],m3$fstatistic[2],m3$fstatistic[3],lower.tail=FALSE) 
-F4 <- pf(m4$fstatistic[1],m4$fstatistic[2],m4$fstatistic[3],lower.tail=FALSE)
-
-Fstats <- data.frame("Regression" = c("Regress Education on Father's Occupation", "Regress Education on Mother's Occupation"), "p-value" = c("4.748773e-54", "2.356427e-61")) %>% tibble::as_tibble()
-library(kableExtra)
-tab <- 
-  kable(Fstats, caption = "p-values of F statistics \\label{tab}")
-tab
-```
-
-# Results \label{results}
-
-Table \ref{reg1} presents the regressions results and figure \ref{plot} plots the regression coefficients with their 95% confidence intervals. 
-
+# Appendix B: Regression Tables \label{appendix} {-} 
 
 ```{r regression1,  echo=FALSE, warning =  FALSE, message= FALSE, fig.align = 'center', fig.cap = "Regressions with log(income) as the dependent variable \\label{reg1}", fig.ext = 'png', fig.height = 3, fig.width = 6}
 library(haven)
@@ -341,7 +313,7 @@ huxreg("OLS" = lm1, "2SLS FE" = iv1, "2SLS ME" = iv2, "2SLS FO" = iv3, "2SLS MO"
                 note = "%stars%.") %>%
   set_caption(Title) %>%
   set_label(Label)
-font_size(htab) <- 11
+font_size(htab) <- 12
 htab
 ```
 
@@ -372,79 +344,3 @@ model_plot <-
 model_plot
 
 ```
-
-
-```{r ShortTable, results = 'asis'}
-
-# library(xtable)
-# data <- mtcars[1:5,] %>% tibble::as_tibble()
-# 
-# table <- xtable(data, caption = "Short Table Example \\label{tab1}")
-#   print.xtable(table,
-#              # tabular.environment = "longtable",
-#              floating = TRUE,
-#              table.placement = 'H',
-#              # scalebox = 0.3,
-#              comment = FALSE,
-#              caption.placement = 'bottom'
-#              )
-
-```
-
-wn possibly long tables. Note that the following will fit on one page if it can, but cleanly spreads over multiple pages:
-
-```{r LongTable, results = 'asis'}
-# 
-# library(xtable)
-# 
-# data = mtcars %>% tibble::as_tibble()
-#   addtorow          <- list()
-#   addtorow$pos      <- list()
-#   addtorow$pos[[1]] <- c(0)
-#   addtorow$command  <- c(paste("\\hline \n",
-#                                "\\endhead \n",
-#                                "\\hline \n",
-#                                "{\\footnotesize Continued on next page} \n",
-#                                "\\endfoot \n",
-#                                "\\endlastfoot \n",sep=""))
-# table <- xtable(data, caption = "Long Table Example")
-#   print.xtable(table,
-#              tabular.environment = "longtable",
-#              floating = FALSE, # Leave this as is.
-#              table.placement = 'H', # Leave this as is.
-#              booktabs = T, # Aesthetics
-#              include.rownames = FALSE,  # Typically you don't want this in a table.
-#              add.to.row = addtorow, # For adding the Continued on next page part...
-#              comment = FALSE,
-#              caption.placement = 'top',  # Where do you want the caption?
-#              size="\\fontsize{12pt}{13pt}\\selectfont"  # Size of text in table..
-#              )
-# See https://cran.r-project.org/web/packages/xtable/vignettes/xtableGallery.pdf for table inspiration
-```
-
-# Conclusion \label{conclusion}
-
-You should NOT write an extensive essay about the topic of interest, nor should you conduct an extensive literature review behind it: you should only reference articles that support the
-motivation for your econometric strategy (in the quest of finding a causal interpretation of a relationship that you are modeling).
-Provide descriptive statistics and graphs to aid in your discussion.
-The assignment should be between 3-6 pages, including your tables and figures.
-
-You are required to go beyond simply estimating and presenting your results, but to convince the reader of their robustness by presenting alternative specifications. You should apply different estimators and specifications where possible. Discuss the shortcomings of the estimators in obtaining a causal effect and argue why your strategy is the best available to obtain a causal effect that satisfies relevant assumptions.
-
-Determine an effect of interest and find instrumental variables to estimate it causally. If possible, use more than one instrument. Given the LATE assumptions, try and explain why your results differ and which is likely to represent the causal effect you are looking for. Conduct sufficient specification tests to establish whether you are overidentifying your instrument set or whether the IVs shift the estimates enough to indicate that OLS would be inconsistent.
-
-\newpage
-
-# References {-}
-
-<div id="refs"></div>
-
-\newpage
-# Appendix {-}
-
-## Appendix A {-}
-
-Some appendix information here
-
-## Appendix B {-}
-

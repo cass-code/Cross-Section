@@ -301,19 +301,20 @@ different instrumental variable estimators: the first two exploit
 parents' education, and the other two use parents' occupations. These
 instruments estimate a `local average treatment effect', which - this
 paper will argue - is more appropriate than OLS estimators for analysing
-the returns to education for South Africa. These instruments are tested
-for strength and validity and then implemented on the NIDS Wave 5 data
-set. This essay\footnote{This essay was written in R using the Texevier
-  package by \protect\hyperlink{ref-Texevier}{Katzke}
+the returns to education for South Africa, if certain assumptions are
+met. These instruments are tested for strength and validity and then
+implemented on the NIDS Wave 5 data set. This essay\footnote{This essay
+  was written in R using the Texevier package by
+  \protect\hyperlink{ref-Texevier}{Katzke}
   (\protect\hyperlink{ref-Texevier}{2017})} is structured as follows:
 section \ref{data} details the data set used and discusses the
 descriptive statistics. Section \ref{meth} outlines the methodology and
-argues that the LATE assumptions for the instrumental variables hold.
-Following this, section \ref{results} presents the regression results
-and evaluates the robustness of the estimators used to obtain a causal
-effect. The final section, \ref{conclusion}, concludes\footnote{The code
-  and write up for this project can be found on Github
-  \url{https://github.com/cass-code/Cross-Section.git}}.
+investigates whether the LATE assumptions for the instrumental variables
+hold. Following this, section \ref{results} discusses the regression
+results and evaluates the robustness of the estimators used to obtain a
+causal effect. The final section, \ref{conclusion},
+concludes\footnote{The code and write up for this project can be found
+  on Github \url{https://github.com/cass-code/Cross-Section.git}}.
 
 \hypertarget{data}{%
 \section{\texorpdfstring{Data \label{data}}{Data }}\label{data}}
@@ -324,11 +325,11 @@ income dynamics study 2017, wave 5 dataset}}
 (\protect\hyperlink{ref-nids}{2018})), which was the first national
 household panel study in South Africa. NIDS is an initiative of the
 Department of Planning, Monitoring and Evaluation, and the Southern
-Africa Labour and Development Research Unit (SALDRU) is tasked with
+Africa Labour and Development Research Unit (SALDRU) is tasked with its
 implementation (\protect\hyperlink{ref-nids5}{Brophy, Branson, Daniels,
 Leibbrandt, Mlatsheni \& Woolard}
-(\protect\hyperlink{ref-nids5}{2018})). NIDS was started in 2008,
-interviewing over 28,000 people. These same people are then interviewed
+(\protect\hyperlink{ref-nids5}{2018})). NIDS was started in 2008, with
+over 28,000 people interviewed. These same people are then interviewed
 every two years. The latest survey is Wave 5 (2017), which is the data
 set used for the regression analysis, where the individual is the unit
 of observation. Wave 5 consists of 37,368 individuals, where the high
@@ -339,10 +340,10 @@ Daniels, Leibbrandt, Mlatsheni \& Woolard}
 (\protect\hyperlink{ref-nids5}{2018})).
 
 \protect\hyperlink{ref-nids1}{Villiers, Leibbrandt \& Woolard}
-(\protect\hyperlink{ref-nids1}{2009}) outlays the design of the survey.
+(\protect\hyperlink{ref-nids1}{2009}) outlay the design of the survey.
 To sample the households used in Wave 1, two-stage cluster sample design
 with stratification was employed. Stage 1 involved selecting 400 Primary
-Sampling Units, based on Statistics South Africa's Master Sample of 300
+Sampling Units, based on Statistics South Africa's Master Sample of
 Primary Sampling Units (2003). Private households in all of South
 Africa's 9 provinces are the target population for NIDS. The 53
 disctrict councils make up the explicit strata in the Master sample.
@@ -379,13 +380,13 @@ quick snapshot of the relationship between income and education. As
 shown by the black regression line, income and education are positively
 correlated, which is what we expect. Section \ref{results} will argue
 that this is a causal relationship. We can also glimpse how education
-and income is distributed in the sample. To get a clearer view of the
+and income are distributed in the sample. To get a clearer view of the
 race distribution, figure \ref{Figure2} shows a bar plot of the four
 main race groups in South Africa: African, Asian/Indian, Coloured and
 White. The graph shows the sample is roughly representative of the South
-African population, with a slightly smaller sample of Coloured and White
-individuals (despite the top up sample). We also want to check that
-income is normally distributed to combat heteroskedasticity in the
+African population, with a slightly smaller sample of Asian/Indian and
+White individuals (despite the top up sample). We also want to check
+that income is normally distributed to combat heteroskedasticity in the
 regression analysis. We find that the income distribution is skewed but
 log of income is fairly normal, as figure \ref{Figure3} shows. This
 indicates that log of income should be the dependent variable in the
@@ -446,25 +447,257 @@ unbiased coefficient for education
 (\protect\hyperlink{ref-metrics}{2015}) \&
 \protect\hyperlink{ref-metrics1}{Venables \& Smith}
 (\protect\hyperlink{ref-metrics1}{2010})). 4 different variables are
-used as an instrument for an individual's education: fathers education,
+used as an instrument for an individual's education: father's education,
 mother's education, father's occupation and mother's occupation. In
 order to use these variables as instruments, we have to check their
-validity(\protect\hyperlink{ref-ang}{Imbens \& Angrist}
+validity (\protect\hyperlink{ref-ang}{Imbens \& Angrist}
 (\protect\hyperlink{ref-ang}{1994})). Economic theory and the literature
 suggests that returns to schooling are heterogeneous
 (\protect\hyperlink{ref-return}{Koop \& Tobias}
 (\protect\hyperlink{ref-return}{2004: 827--828})), which implies that
 for the instruments to be valid they have to comply with the Local
 Average Treatment Effects (LATE) identifying assumptions. The four LATE
-assumptions are: independence, random assignment, exclusion restriction,
-and monotonicity. The first section below, ref\{spec\}, interprets the
-diagnostic tests for instrument variables and the second part,
-ref\{late\}, evaluates whether the LATE assumptions hold for the
-instrument variables.
+assumptions are: relevance, monotonicity, random assignment and
+exclusion restriction. The section below, \ref{spec}, interprets the
+diagnostic tests for the instrument variables and evaluates whether the
+LATE assumptions hold.
 
-\hypertarget{specification-tests}{%
-\subsection{\texorpdfstring{Specification Tests
-\label{spec}}{Specification Tests }}\label{specification-tests}}
+\hypertarget{specification-tests-and-late-assumptions}{%
+\subsection{\texorpdfstring{Specification Tests and LATE
+Assumptions\label{spec}}{Specification Tests and LATE Assumptions}}\label{specification-tests-and-late-assumptions}}
+
+The relevance assumption is directly testable on the data, for which we
+can use the `Weak Instrument' test. The results of the specification
+tests in the appendix, \ref{appendixA}, show that all four instruments
+are not weak instruments. The null hypothesis for the `Weak Instrument'
+test is that the instrument is weak. The p-values for each of the
+individual tests are zero, which rejects the null hypothesis. This
+supports the relevance assumption and these instruments affect treatment
+for at least some individuals. This makes intuitive sense as well: if an
+individual was on the fence about studying further, and his/her parents
+studied further, the parents are likely to convince that individual to
+follow in their footsteps/take the ``safe'' option of studying further.
+
+The Wu-Hausman test evaluates whether the OLS and instrumental variable
+regressions give significantly different estimates. The null hypothesis
+is that the estimated coefficients of OLS and IV regression are not
+statistically different from one another. For all four instruments, the
+null hypothesis is rejected, which means the OLS and IV estimates are
+sufficiently different from one another. The Sargan test is applicable
+when the number of instruments exceeds the number of endogenous
+variables. Rejecting the null of the Sargan test implies that the
+instruments are invalid. For father's occupation and mother's
+occupation, the Sargan test fails to reject the null, thus all the
+instrumental variables are valid.
+
+Regarding the assumption of monotonicity: it seems unlikely that someone
+who would have pursued education further would decide not to because
+either of his/her parents pursued education further. Thus, it is
+reasonable to conclude that the monotonicity assumption holds for
+father's and mother's education (i.e.~there are no defiers). Similarly,
+it seems unreasonable that someone who would have pursued education
+further would decide not to due to his/her parents' occupation.
+Although, one could argue that: if an individual would have liked to
+study further, but doesn't want the pressure of living up to his/her
+parents' academic achievements and so opts out, the monotonicity
+assumption is invalid. However, this is unlikely to occur for the
+majority of the sample and can be ignored.
+
+The random assignment assumption is difficult to argue for, since the
+distribution of potential outcomes and potential take-up values should
+look same for those whose parents studied further and for those whose
+didn't, when in reality the distribution doesn't look the same. We would
+expect individuals whose parents have lower levels of education to have
+different potential earnings distributions or potential take-up
+probabilities than individuals whose parents have higher levels of
+education. Similarly for individual's whose parents have different
+occupations. In South Africa, networks play a large role in employment
+opportunities and therefore play a role in earning potentials. The
+earnings' potential of an individual changes depending on their
+connections and their parents' connections, which is correlated to
+parental occupation; this is a violation of the exclusion restriction.
+
+The exclusion restriction assumption is broken if an individual's
+parents' education affects his/her potential earnings through another
+variable other than education. This is possible, for example, through
+socioeconomic standing. If an individual's parents' education/occupation
+is correlated with their being wealthy and well-connected, and having
+wealthy and well-connected parents increases earning potential (they
+could provide financial and social capital for business ventures) then
+the exclusion restriction assumption no longer holds. However, according
+to \protect\hyperlink{ref-block}{Hoogerheide, Block \& Thurik}
+(\protect\hyperlink{ref-block}{2012}), violations of the strict validity
+assumption does not necessarily lead to results which differ
+significantly from those of the strict validity case.
+\protect\hyperlink{ref-block}{Hoogerheide, Block \& Thurik}
+(\protect\hyperlink{ref-block}{2012}) make the case that family
+background variables can be used as instruments for regressions
+involving income. The next section \ref{results} discusses the results
+of the ordinary least squares regression (OLS) compared to the
+instrumental variable (IV )regressions.
+
+\hypertarget{results}{%
+\section{\texorpdfstring{Results
+\label{results}}{Results }}\label{results}}
+
+Table \ref{FE} in the appendix (\ref{appendix}) presents the regression
+results, and the figure below it plots the regression coefficients with
+their 95\% confidence intervals. The OLS regression regresses log income
+on education, controlling for age, race, and gender. The coefficients of
+the control variables have the expected signs and most are statistically
+significant at 1\%. The coefficient for education is 0.194, which
+implies that a 1 unit (a year) increase in education is associated with
+a 21,4\% increase in income, ceteris paribus. However, in order to show
+there exists a causal relationship between education and income, and
+that there exists bias in the OLS estimate, two-stage least squares
+(2SLS) was applied using the 4 different instrumental variables.
+
+The first 2SLS regression employs father's education as an instrument
+for education (2SLS FE in \ref{reg1}). The coefficient for this
+regression is 0.309, which is significantly higher than the OLS
+estimate. This implies that the OLS estimate is bias downwards. The
+second IV regression uses mother's education as an instrument for
+education (2SLS ME in \ref{reg1}). The coefficient for education here is
+0.280; again this is a lot higher than the OLS estimate. The third and
+fourth 2SLS regressions that exploit father's and mother's occupation as
+instrument variables for education (2SLS FO, 2SLS MO in \ref{reg1}) show
+similar results. They estimate the coefficient for education to be 0.327
+and 0.387 respectively. However, the sample size diminishes when using
+occupation as a variable, which makes them less statistically
+trustworthy than the other estimates. This is illustrated clearly by the
+large confidence bands for `FO' and `MO' in the figure in the appendix
+\ref{reg1}. Overall, the IV regression results show that the OLS
+estimate is substantially downwards biased. These findings are similar
+to those of \protect\hyperlink{ref-agree}{Biyase \& Zwane}
+(\protect\hyperlink{ref-agree}{2015}), who also show that returns to
+education are underreported by OLS regressions.
+
+However, it is important to recognize that the 2SLS estimators recover
+local average treatment effects (LATE) whereas OLS estimators recover
+average treatment effects. In the IV regressions, the effect of further
+education is only captured for those individuals who are more likely to
+further their education because their parents pursued education further.
+This empirical stance does not provide information about the effect of
+studying further among people would have always studied further or never
+studied further, regardless of their parents' education/occupations.
+
+\hypertarget{conclusion}{%
+\section{\texorpdfstring{Conclusion
+\label{conclusion}}{Conclusion }}\label{conclusion}}
+
+This essay set out to show that there is a causal link between education
+and income using four different instrumental variables. The OLS
+regression finds that education has a positive coefficient, as expected,
+but the four 2SLS regressions indicate that OLS may be underestimating
+the returns to education. The fact that all four 2SLS regressions show
+higher education estimates suggests the results are robust, and the
+instrumental variables shift the estimate enough to indicate that OLS
+would be inconsistent. Although some of the LATE assumptions may be
+violated by selecting parents' education and occupations as instrumental
+variables, they may still be viable tools to introduce exogeneity into
+the model (\protect\hyperlink{ref-block}{Hoogerheide, Block \& Thurik}
+(\protect\hyperlink{ref-block}{2012})). Further robustness checks could
+be conducted by including more controls in the regressions (such as
+marital status and union status\footnote{I ran these regressions and
+  found similar results; however the sample sizes were very small}),
+using fixed effects to control for time invariant unobservables or using
+education lagged as an instrument variable.
+
+\newpage
+
+\hypertarget{references}{%
+\section*{References}\label{references}}
+\addcontentsline{toc}{section}{References}
+
+\hypertarget{refs}{}
+\begin{CSLReferences}{1}{0}
+\leavevmode\hypertarget{ref-agree}{}%
+Biyase, M. \& Zwane, T. 2015. Does education pay in south africa?
+Estimating returns to education using two stage least squares approach.
+\emph{International Business \& Economics Research Journal (IBER)}.
+14(6):807--814.
+
+\leavevmode\hypertarget{ref-nids5}{}%
+Brophy, T., Branson, N., Daniels, R.C., Leibbrandt, M., Mlatsheni, C. \&
+Woolard, I. 2018. \emph{National income dynamics study panel user
+manual}. (Release 2018. Version 1). Cape Town: Southern Africa Labour;
+Development Research Unit; Southern Africa Labour; Development Research
+Unit.
+
+\leavevmode\hypertarget{ref-R}{}%
+Colonescu, C. 2016. Principles of econometrics with r. 11. {[}Online{]},
+Available: \url{https://bookdown.org/ccolonescu/RPoE4/}.
+
+\leavevmode\hypertarget{ref-hertz}{}%
+Hertz, T. 2003. Upward bias in the estimated returns to education:
+Evidence from south africa. \emph{American Economic Review}.
+93(4):1354--1368.
+
+\leavevmode\hypertarget{ref-block}{}%
+Hoogerheide, L., Block, J. \& Thurik, R. 2012. Family background
+variables as instruments for education in income regressions: A bayesian
+analysis. \emph{Economics of Education Review}. 31(5):515--523.
+
+\leavevmode\hypertarget{ref-ang}{}%
+Imbens, G.W. \& Angrist, J.D. 1994. Identification and estimation of
+local average treatment effects. \emph{Econometrica}. 62(2):467--475.
+{[}Online{]}, Available: \url{http://www.jstor.org/stable/2951620}.
+
+\leavevmode\hypertarget{ref-isco}{}%
+\emph{International standard classification of occupations: Structure,
+group definitions and correspondence tables}. 2012. (ISCO - 08).
+International Labour Office, Geneva; International Labour Organization.
+
+\leavevmode\hypertarget{ref-Texevier}{}%
+Katzke, N.F. 2017. \emph{{Texevier}: {P}ackage to create elsevier
+templates for rmarkdown}. Stellenbosch, South Africa: Bureau for
+Economic Research.
+
+\leavevmode\hypertarget{ref-return}{}%
+Koop, G. \& Tobias, J.L. 2004. Learning about heterogeneity in returns
+to schooling. \emph{Journal of Applied Econometrics}. 19(7):827--849.
+{[}Online{]}, Available: \url{http://www.jstor.org/stable/25146329}.
+
+\leavevmode\hypertarget{ref-disc}{}%
+Lang, K. 1993. \emph{Ability bias, discount rate bias and the return to
+education}. (MPRA Paper). University Library of Munich, Germany.
+{[}Online{]}, Available:
+\url{https://EconPapers.repec.org/RePEc:pra:mprapa:24651}.
+
+\leavevmode\hypertarget{ref-mince}{}%
+Mincer, J. 1974. \emph{Schooling, experience and earnings}. National
+Bureau of Economics, New York: Columbia University Press.
+
+\leavevmode\hypertarget{ref-nids}{}%
+\emph{National income dynamics study 2017, wave 5 dataset}. 2018. Cape
+Town, South Africa: Department of Planning, Monitoring,; Evaluation
+{[}funding agency{]} \& DataFirst {[}distributor{]}. {[}Online{]},
+Available: \url{https://doi.org/10.25828/fw3h-v708}.
+
+\leavevmode\hypertarget{ref-metrics}{}%
+Stock, J. H. \& Watson, M.W. 2015. \emph{Introduction to econometrics,
+third update, global edition}. Pearson Education Limited.
+
+\leavevmode\hypertarget{ref-metrics1}{}%
+Venables, W.N. \& Smith, D.M. 2010. \emph{{R-Intro}: {A}n introduction
+to r}. {[}Online{]}, Available:
+\url{https://cran.r-project.org/doc/manuals/r-release/R-intro.pdf}.
+
+\leavevmode\hypertarget{ref-nids1}{}%
+Villiers, L. de, Leibbrandt, M. \& Woolard, I. 2009. \emph{Methodology:
+Report on NIDS wave 1}. (Technical Paper no. 1). Cape Town: Southern
+Africa Labour; Development Research Unit; Southern Africa Labour;
+Development Research Unit.
+
+\end{CSLReferences}
+
+\newpage
+
+\hypertarget{appendix-a-specification-tests}{%
+\section*{\texorpdfstring{Appendix A: Specification Tests
+\label{appendixA}}{Appendix A: Specification Tests }}\label{appendix-a-specification-tests}}
+\addcontentsline{toc}{section}{Appendix A: Specification Tests
+\label{appendixA}}
 
 \begin{table}
 
@@ -534,159 +767,11 @@ Sargan & 8 & NA & 4.50194 & 0.809239\\
 \end{tabular}
 \end{table}
 
-\hypertarget{late-assumptions}{%
-\subsection{\texorpdfstring{LATE Assumptions
-\label{late}}{LATE Assumptions }}\label{late-assumptions}}
-
-If our instrument is: 1. randomly assigned 2. only affects our outcome
-through its effect on our endogenous variable 3. has a significant
-impact on take-up of treatment, and 4. does not deter anyone from
-treatment
-
-Random Assignment: Random assignment of draft eligibility means
-independence assumption is very convincing. Would not expect individuals
-who were born on low-lottery days to have different potential earnings
-distributions or potential take-up probabilities than high-lottery
-individuals.
-
-Exclusion restriction: More reason to be concerned. Draft eligible men
-were allowed to defer their military service if they wanted to proceed
-with their studies. If some men decided to get more schooling because
-they had low lottery numbers and did not want to serve in the military,
-then this could have affected earnings via education attainment rather
-than via military service.
-
-Monotonicity: It seemse unlikely that someone who would have pursued
-education further would decide not to because either of his/her parent
-pursued education further. Thus, it's reasonable to conclude that the
-monotonicity assumption holds (i.e.~there are no defiers). Similarly
-
-Is it possible that someone would have volunteered for the army (if
-draft ineligible) but decided not to because of draft eligibility? Seems
-unlikely.
-
-The relevance assumption is testable and table ref\{reg5\} shows that
-both parents' education is correlated with education (and the
-coefficients are statistically significant at a 1\% level). This means
-these instruments affect treatment for at least some individuals. The
-regression of education on parents' occupation shows that joint effect
-of the occupation types are significant. The p-values associated with
-the F-test for each regression are presented in \ref{tab}. The p-values
-are essentially 0 and thus reject the null hypothesis that the joint
-effect is zero. From an intuitive stand point, if an individual's
-parents pursued more years of education,
-
-Are there individuals who would not have gone to war if they didn't get
-picked, but ended up going just because they were eligible? Seems
-plausible.
-
- 
-  \providecommand{\huxb}[2]{\arrayrulecolor[RGB]{#1}\global\arrayrulewidth=#2pt}
-  \providecommand{\huxvb}[2]{\color[RGB]{#1}\vrule width #2pt}
-  \providecommand{\huxtpad}[1]{\rule{0pt}{#1}}
-  \providecommand{\huxbpad}[1]{\rule[-#1]{0pt}{#1}}
-
-\begin{table}[ht]
-\begin{centerbox}
-\begin{threeparttable}
-\captionsetup{justification=centering,singlelinecheck=off}
-\caption{Regressions: Instrument Relevance}
- \label{reg5}
-\setlength{\tabcolsep}{0pt}
-\begin{tabular}{l l l}
-
-
-\hhline{>{\huxb{0, 0, 0}{0.8}}->{\huxb{0, 0, 0}{0.8}}->{\huxb{0, 0, 0}{0.8}}-}
-\arrayrulecolor{black}
-
-\multicolumn{1}{!{\huxvb{0, 0, 0}{0}}c!{\huxvb{0, 0, 0}{0}}}{\huxtpad{6pt + 1em}\centering \hspace{6pt} {\fontsize{11pt}{13.2pt}\selectfont } \hspace{6pt}\huxbpad{6pt}} &
-\multicolumn{1}{c!{\huxvb{0, 0, 0}{0}}}{\huxtpad{6pt + 1em}\centering \hspace{6pt} {\fontsize{11pt}{13.2pt}\selectfont Education} \hspace{6pt}\huxbpad{6pt}} &
-\multicolumn{1}{c!{\huxvb{0, 0, 0}{0}}}{\huxtpad{6pt + 1em}\centering \hspace{6pt} {\fontsize{11pt}{13.2pt}\selectfont Education} \hspace{6pt}\huxbpad{6pt}} \tabularnewline[-0.5pt]
-
-
-\hhline{>{\huxb{255, 255, 255}{0.4}}->{\huxb{0, 0, 0}{0.4}}->{\huxb{0, 0, 0}{0.4}}-}
-\arrayrulecolor{black}
-
-\multicolumn{1}{!{\huxvb{0, 0, 0}{0}}l!{\huxvb{0, 0, 0}{0}}}{\huxtpad{6pt + 1em}\raggedright \hspace{6pt} {\fontsize{11pt}{13.2pt}\selectfont Father's Education} \hspace{6pt}\huxbpad{6pt}} &
-\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{6pt + 1em}\raggedleft \hspace{6pt} {\fontsize{11pt}{13.2pt}\selectfont 0.234 ***} \hspace{6pt}\huxbpad{6pt}} &
-\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{6pt + 1em}\raggedleft \hspace{6pt} {\fontsize{11pt}{13.2pt}\selectfont ~~~~~~~~} \hspace{6pt}\huxbpad{6pt}} \tabularnewline[-0.5pt]
-
-
-\hhline{}
-\arrayrulecolor{black}
-
-\multicolumn{1}{!{\huxvb{0, 0, 0}{0}}l!{\huxvb{0, 0, 0}{0}}}{\huxtpad{6pt + 1em}\raggedright \hspace{6pt} {\fontsize{11pt}{13.2pt}\selectfont } \hspace{6pt}\huxbpad{6pt}} &
-\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{6pt + 1em}\raggedleft \hspace{6pt} {\fontsize{11pt}{13.2pt}\selectfont (0.008)~~~} \hspace{6pt}\huxbpad{6pt}} &
-\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{6pt + 1em}\raggedleft \hspace{6pt} {\fontsize{11pt}{13.2pt}\selectfont ~~~~~~~~} \hspace{6pt}\huxbpad{6pt}} \tabularnewline[-0.5pt]
-
-
-\hhline{}
-\arrayrulecolor{black}
-
-\multicolumn{1}{!{\huxvb{0, 0, 0}{0}}l!{\huxvb{0, 0, 0}{0}}}{\huxtpad{6pt + 1em}\raggedright \hspace{6pt} {\fontsize{11pt}{13.2pt}\selectfont Mother's Education} \hspace{6pt}\huxbpad{6pt}} &
-\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{6pt + 1em}\raggedleft \hspace{6pt} {\fontsize{11pt}{13.2pt}\selectfont ~~~~~~~~} \hspace{6pt}\huxbpad{6pt}} &
-\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{6pt + 1em}\raggedleft \hspace{6pt} {\fontsize{11pt}{13.2pt}\selectfont 0.247 ***} \hspace{6pt}\huxbpad{6pt}} \tabularnewline[-0.5pt]
-
-
-\hhline{}
-\arrayrulecolor{black}
-
-\multicolumn{1}{!{\huxvb{0, 0, 0}{0}}l!{\huxvb{0, 0, 0}{0}}}{\huxtpad{6pt + 1em}\raggedright \hspace{6pt} {\fontsize{11pt}{13.2pt}\selectfont } \hspace{6pt}\huxbpad{6pt}} &
-\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{6pt + 1em}\raggedleft \hspace{6pt} {\fontsize{11pt}{13.2pt}\selectfont ~~~~~~~~} \hspace{6pt}\huxbpad{6pt}} &
-\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{6pt + 1em}\raggedleft \hspace{6pt} {\fontsize{11pt}{13.2pt}\selectfont (0.008)~~~} \hspace{6pt}\huxbpad{6pt}} \tabularnewline[-0.5pt]
-
-
-\hhline{>{\huxb{255, 255, 255}{0.4}}->{\huxb{0, 0, 0}{0.4}}->{\huxb{0, 0, 0}{0.4}}-}
-\arrayrulecolor{black}
-
-\multicolumn{1}{!{\huxvb{0, 0, 0}{0}}l!{\huxvb{0, 0, 0}{0}}}{\huxtpad{6pt + 1em}\raggedright \hspace{6pt} {\fontsize{11pt}{13.2pt}\selectfont N} \hspace{6pt}\huxbpad{6pt}} &
-\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{6pt + 1em}\raggedleft \hspace{6pt} {\fontsize{11pt}{13.2pt}\selectfont 3376~~~~~~~~} \hspace{6pt}\huxbpad{6pt}} &
-\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{6pt + 1em}\raggedleft \hspace{6pt} {\fontsize{11pt}{13.2pt}\selectfont 3613~~~~~~~~} \hspace{6pt}\huxbpad{6pt}} \tabularnewline[-0.5pt]
-
-
-\hhline{}
-\arrayrulecolor{black}
-
-\multicolumn{1}{!{\huxvb{0, 0, 0}{0}}l!{\huxvb{0, 0, 0}{0}}}{\huxtpad{6pt + 1em}\raggedright \hspace{6pt} {\fontsize{11pt}{13.2pt}\selectfont R2} \hspace{6pt}\huxbpad{6pt}} &
-\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{6pt + 1em}\raggedleft \hspace{6pt} {\fontsize{11pt}{13.2pt}\selectfont 0.190~~~~} \hspace{6pt}\huxbpad{6pt}} &
-\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{6pt + 1em}\raggedleft \hspace{6pt} {\fontsize{11pt}{13.2pt}\selectfont 0.197~~~~} \hspace{6pt}\huxbpad{6pt}} \tabularnewline[-0.5pt]
-
-
-\hhline{>{\huxb{0, 0, 0}{0.8}}->{\huxb{0, 0, 0}{0.8}}->{\huxb{0, 0, 0}{0.8}}-}
-\arrayrulecolor{black}
-
-\multicolumn{3}{!{\huxvb{0, 0, 0}{0}}l!{\huxvb{0, 0, 0}{0}}}{\huxtpad{6pt + 1em}\raggedright \hspace{6pt} {\fontsize{11pt}{13.2pt}\selectfont  *** p $<$ 0.001;  ** p $<$ 0.01;  * p $<$ 0.05.} \hspace{6pt}\huxbpad{6pt}} \tabularnewline[-0.5pt]
-
-
-\hhline{}
-\arrayrulecolor{black}
-\end{tabular}
-\end{threeparttable}\par\end{centerbox}
-
-\end{table}
- 
-
-\begin{table}
-
-\caption{\label{tab:unnamed-chunk-1}p-values of F statistics \label{tab}}
-\centering
-\begin{tabular}[t]{l|l}
-\hline
-Regression & p.value\\
-\hline
-Regress Education on Father's Occupation & 4.748773e-54\\
-\hline
-Regress Education on Mother's Occupation & 2.356427e-61\\
-\hline
-\end{tabular}
-\end{table}
-
-\hypertarget{results}{%
-\section{\texorpdfstring{Results
-\label{results}}{Results }}\label{results}}
-
-Table \ref{reg1} presents the regressions results and figure \ref{plot}
-plots the regression coefficients with their 95\% confidence intervals.
+\hypertarget{appendix-b-regression-tables}{%
+\section*{\texorpdfstring{Appendix B: Regression Tables
+\label{appendix}}{Appendix B: Regression Tables }}\label{appendix-b-regression-tables}}
+\addcontentsline{toc}{section}{Appendix B: Regression Tables
+\label{appendix}}
 
  
   \providecommand{\huxb}[2]{\arrayrulecolor[RGB]{#1}\global\arrayrulewidth=#2pt}
@@ -707,194 +792,194 @@ plots the regression coefficients with their 95\% confidence intervals.
 \hhline{>{\huxb{0, 0, 0}{0.8}}->{\huxb{0, 0, 0}{0.8}}->{\huxb{0, 0, 0}{0.8}}->{\huxb{0, 0, 0}{0.8}}->{\huxb{0, 0, 0}{0.8}}->{\huxb{0, 0, 0}{0.8}}-}
 \arrayrulecolor{black}
 
-\multicolumn{1}{!{\huxvb{0, 0, 0}{0}}c!{\huxvb{0, 0, 0}{0}}}{\huxtpad{6pt + 1em}\centering \hspace{6pt} {\fontsize{11pt}{13.2pt}\selectfont } \hspace{6pt}\huxbpad{6pt}} &
-\multicolumn{1}{c!{\huxvb{0, 0, 0}{0}}}{\huxtpad{6pt + 1em}\centering \hspace{6pt} {\fontsize{11pt}{13.2pt}\selectfont OLS} \hspace{6pt}\huxbpad{6pt}} &
-\multicolumn{1}{c!{\huxvb{0, 0, 0}{0}}}{\huxtpad{6pt + 1em}\centering \hspace{6pt} {\fontsize{11pt}{13.2pt}\selectfont 2SLS FE} \hspace{6pt}\huxbpad{6pt}} &
-\multicolumn{1}{c!{\huxvb{0, 0, 0}{0}}}{\huxtpad{6pt + 1em}\centering \hspace{6pt} {\fontsize{11pt}{13.2pt}\selectfont 2SLS ME} \hspace{6pt}\huxbpad{6pt}} &
-\multicolumn{1}{c!{\huxvb{0, 0, 0}{0}}}{\huxtpad{6pt + 1em}\centering \hspace{6pt} {\fontsize{11pt}{13.2pt}\selectfont 2SLS FO} \hspace{6pt}\huxbpad{6pt}} &
-\multicolumn{1}{c!{\huxvb{0, 0, 0}{0}}}{\huxtpad{6pt + 1em}\centering \hspace{6pt} {\fontsize{11pt}{13.2pt}\selectfont 2SLS MO} \hspace{6pt}\huxbpad{6pt}} \tabularnewline[-0.5pt]
+\multicolumn{1}{!{\huxvb{0, 0, 0}{0}}c!{\huxvb{0, 0, 0}{0}}}{\huxtpad{6pt + 1em}\centering \hspace{6pt} {\fontsize{12pt}{14.4pt}\selectfont } \hspace{6pt}\huxbpad{6pt}} &
+\multicolumn{1}{c!{\huxvb{0, 0, 0}{0}}}{\huxtpad{6pt + 1em}\centering \hspace{6pt} {\fontsize{12pt}{14.4pt}\selectfont OLS} \hspace{6pt}\huxbpad{6pt}} &
+\multicolumn{1}{c!{\huxvb{0, 0, 0}{0}}}{\huxtpad{6pt + 1em}\centering \hspace{6pt} {\fontsize{12pt}{14.4pt}\selectfont 2SLS FE} \hspace{6pt}\huxbpad{6pt}} &
+\multicolumn{1}{c!{\huxvb{0, 0, 0}{0}}}{\huxtpad{6pt + 1em}\centering \hspace{6pt} {\fontsize{12pt}{14.4pt}\selectfont 2SLS ME} \hspace{6pt}\huxbpad{6pt}} &
+\multicolumn{1}{c!{\huxvb{0, 0, 0}{0}}}{\huxtpad{6pt + 1em}\centering \hspace{6pt} {\fontsize{12pt}{14.4pt}\selectfont 2SLS FO} \hspace{6pt}\huxbpad{6pt}} &
+\multicolumn{1}{c!{\huxvb{0, 0, 0}{0}}}{\huxtpad{6pt + 1em}\centering \hspace{6pt} {\fontsize{12pt}{14.4pt}\selectfont 2SLS MO} \hspace{6pt}\huxbpad{6pt}} \tabularnewline[-0.5pt]
 
 
 \hhline{>{\huxb{255, 255, 255}{0.4}}->{\huxb{0, 0, 0}{0.4}}->{\huxb{0, 0, 0}{0.4}}->{\huxb{0, 0, 0}{0.4}}->{\huxb{0, 0, 0}{0.4}}->{\huxb{0, 0, 0}{0.4}}-}
 \arrayrulecolor{black}
 
-\multicolumn{1}{!{\huxvb{0, 0, 0}{0}}l!{\huxvb{0, 0, 0}{0}}}{\huxtpad{6pt + 1em}\raggedright \hspace{6pt} {\fontsize{11pt}{13.2pt}\selectfont Age} \hspace{6pt}\huxbpad{6pt}} &
-\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{6pt + 1em}\raggedleft \hspace{6pt} {\fontsize{11pt}{13.2pt}\selectfont 0.047 ***} \hspace{6pt}\huxbpad{6pt}} &
-\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{6pt + 1em}\raggedleft \hspace{6pt} {\fontsize{11pt}{13.2pt}\selectfont 0.040 ***} \hspace{6pt}\huxbpad{6pt}} &
-\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{6pt + 1em}\raggedleft \hspace{6pt} {\fontsize{11pt}{13.2pt}\selectfont 0.049 ***} \hspace{6pt}\huxbpad{6pt}} &
-\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{6pt + 1em}\raggedleft \hspace{6pt} {\fontsize{11pt}{13.2pt}\selectfont 0.056 ***} \hspace{6pt}\huxbpad{6pt}} &
-\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{6pt + 1em}\raggedleft \hspace{6pt} {\fontsize{11pt}{13.2pt}\selectfont 0.072 ***} \hspace{6pt}\huxbpad{6pt}} \tabularnewline[-0.5pt]
+\multicolumn{1}{!{\huxvb{0, 0, 0}{0}}l!{\huxvb{0, 0, 0}{0}}}{\huxtpad{6pt + 1em}\raggedright \hspace{6pt} {\fontsize{12pt}{14.4pt}\selectfont Age} \hspace{6pt}\huxbpad{6pt}} &
+\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{6pt + 1em}\raggedleft \hspace{6pt} {\fontsize{12pt}{14.4pt}\selectfont 0.047 ***} \hspace{6pt}\huxbpad{6pt}} &
+\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{6pt + 1em}\raggedleft \hspace{6pt} {\fontsize{12pt}{14.4pt}\selectfont 0.040 ***} \hspace{6pt}\huxbpad{6pt}} &
+\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{6pt + 1em}\raggedleft \hspace{6pt} {\fontsize{12pt}{14.4pt}\selectfont 0.049 ***} \hspace{6pt}\huxbpad{6pt}} &
+\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{6pt + 1em}\raggedleft \hspace{6pt} {\fontsize{12pt}{14.4pt}\selectfont 0.056 ***} \hspace{6pt}\huxbpad{6pt}} &
+\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{6pt + 1em}\raggedleft \hspace{6pt} {\fontsize{12pt}{14.4pt}\selectfont 0.072 ***} \hspace{6pt}\huxbpad{6pt}} \tabularnewline[-0.5pt]
 
 
 \hhline{}
 \arrayrulecolor{black}
 
-\multicolumn{1}{!{\huxvb{0, 0, 0}{0}}l!{\huxvb{0, 0, 0}{0}}}{\huxtpad{6pt + 1em}\raggedright \hspace{6pt} {\fontsize{11pt}{13.2pt}\selectfont } \hspace{6pt}\huxbpad{6pt}} &
-\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{6pt + 1em}\raggedleft \hspace{6pt} {\fontsize{11pt}{13.2pt}\selectfont (0.009)~~~} \hspace{6pt}\huxbpad{6pt}} &
-\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{6pt + 1em}\raggedleft \hspace{6pt} {\fontsize{11pt}{13.2pt}\selectfont (0.009)~~~} \hspace{6pt}\huxbpad{6pt}} &
-\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{6pt + 1em}\raggedleft \hspace{6pt} {\fontsize{11pt}{13.2pt}\selectfont (0.009)~~~} \hspace{6pt}\huxbpad{6pt}} &
-\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{6pt + 1em}\raggedleft \hspace{6pt} {\fontsize{11pt}{13.2pt}\selectfont (0.012)~~~} \hspace{6pt}\huxbpad{6pt}} &
-\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{6pt + 1em}\raggedleft \hspace{6pt} {\fontsize{11pt}{13.2pt}\selectfont (0.015)~~~} \hspace{6pt}\huxbpad{6pt}} \tabularnewline[-0.5pt]
+\multicolumn{1}{!{\huxvb{0, 0, 0}{0}}l!{\huxvb{0, 0, 0}{0}}}{\huxtpad{6pt + 1em}\raggedright \hspace{6pt} {\fontsize{12pt}{14.4pt}\selectfont } \hspace{6pt}\huxbpad{6pt}} &
+\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{6pt + 1em}\raggedleft \hspace{6pt} {\fontsize{12pt}{14.4pt}\selectfont (0.009)~~~} \hspace{6pt}\huxbpad{6pt}} &
+\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{6pt + 1em}\raggedleft \hspace{6pt} {\fontsize{12pt}{14.4pt}\selectfont (0.009)~~~} \hspace{6pt}\huxbpad{6pt}} &
+\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{6pt + 1em}\raggedleft \hspace{6pt} {\fontsize{12pt}{14.4pt}\selectfont (0.009)~~~} \hspace{6pt}\huxbpad{6pt}} &
+\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{6pt + 1em}\raggedleft \hspace{6pt} {\fontsize{12pt}{14.4pt}\selectfont (0.012)~~~} \hspace{6pt}\huxbpad{6pt}} &
+\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{6pt + 1em}\raggedleft \hspace{6pt} {\fontsize{12pt}{14.4pt}\selectfont (0.015)~~~} \hspace{6pt}\huxbpad{6pt}} \tabularnewline[-0.5pt]
 
 
 \hhline{}
 \arrayrulecolor{black}
 
-\multicolumn{1}{!{\huxvb{0, 0, 0}{0}}l!{\huxvb{0, 0, 0}{0}}}{\huxtpad{6pt + 1em}\raggedright \hspace{6pt} {\fontsize{11pt}{13.2pt}\selectfont Age2} \hspace{6pt}\huxbpad{6pt}} &
-\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{6pt + 1em}\raggedleft \hspace{6pt} {\fontsize{11pt}{13.2pt}\selectfont -0.000 **~} \hspace{6pt}\huxbpad{6pt}} &
-\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{6pt + 1em}\raggedleft \hspace{6pt} {\fontsize{11pt}{13.2pt}\selectfont -0.000~~~~} \hspace{6pt}\huxbpad{6pt}} &
-\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{6pt + 1em}\raggedleft \hspace{6pt} {\fontsize{11pt}{13.2pt}\selectfont -0.000 *~~} \hspace{6pt}\huxbpad{6pt}} &
-\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{6pt + 1em}\raggedleft \hspace{6pt} {\fontsize{11pt}{13.2pt}\selectfont -0.000 *~~} \hspace{6pt}\huxbpad{6pt}} &
-\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{6pt + 1em}\raggedleft \hspace{6pt} {\fontsize{11pt}{13.2pt}\selectfont -0.000 **~} \hspace{6pt}\huxbpad{6pt}} \tabularnewline[-0.5pt]
+\multicolumn{1}{!{\huxvb{0, 0, 0}{0}}l!{\huxvb{0, 0, 0}{0}}}{\huxtpad{6pt + 1em}\raggedright \hspace{6pt} {\fontsize{12pt}{14.4pt}\selectfont Age2} \hspace{6pt}\huxbpad{6pt}} &
+\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{6pt + 1em}\raggedleft \hspace{6pt} {\fontsize{12pt}{14.4pt}\selectfont -0.000 **~} \hspace{6pt}\huxbpad{6pt}} &
+\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{6pt + 1em}\raggedleft \hspace{6pt} {\fontsize{12pt}{14.4pt}\selectfont -0.000~~~~} \hspace{6pt}\huxbpad{6pt}} &
+\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{6pt + 1em}\raggedleft \hspace{6pt} {\fontsize{12pt}{14.4pt}\selectfont -0.000 *~~} \hspace{6pt}\huxbpad{6pt}} &
+\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{6pt + 1em}\raggedleft \hspace{6pt} {\fontsize{12pt}{14.4pt}\selectfont -0.000 *~~} \hspace{6pt}\huxbpad{6pt}} &
+\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{6pt + 1em}\raggedleft \hspace{6pt} {\fontsize{12pt}{14.4pt}\selectfont -0.000 **~} \hspace{6pt}\huxbpad{6pt}} \tabularnewline[-0.5pt]
 
 
 \hhline{}
 \arrayrulecolor{black}
 
-\multicolumn{1}{!{\huxvb{0, 0, 0}{0}}l!{\huxvb{0, 0, 0}{0}}}{\huxtpad{6pt + 1em}\raggedright \hspace{6pt} {\fontsize{11pt}{13.2pt}\selectfont } \hspace{6pt}\huxbpad{6pt}} &
-\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{6pt + 1em}\raggedleft \hspace{6pt} {\fontsize{11pt}{13.2pt}\selectfont (0.000)~~~} \hspace{6pt}\huxbpad{6pt}} &
-\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{6pt + 1em}\raggedleft \hspace{6pt} {\fontsize{11pt}{13.2pt}\selectfont (0.000)~~~} \hspace{6pt}\huxbpad{6pt}} &
-\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{6pt + 1em}\raggedleft \hspace{6pt} {\fontsize{11pt}{13.2pt}\selectfont (0.000)~~~} \hspace{6pt}\huxbpad{6pt}} &
-\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{6pt + 1em}\raggedleft \hspace{6pt} {\fontsize{11pt}{13.2pt}\selectfont (0.000)~~~} \hspace{6pt}\huxbpad{6pt}} &
-\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{6pt + 1em}\raggedleft \hspace{6pt} {\fontsize{11pt}{13.2pt}\selectfont (0.000)~~~} \hspace{6pt}\huxbpad{6pt}} \tabularnewline[-0.5pt]
+\multicolumn{1}{!{\huxvb{0, 0, 0}{0}}l!{\huxvb{0, 0, 0}{0}}}{\huxtpad{6pt + 1em}\raggedright \hspace{6pt} {\fontsize{12pt}{14.4pt}\selectfont } \hspace{6pt}\huxbpad{6pt}} &
+\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{6pt + 1em}\raggedleft \hspace{6pt} {\fontsize{12pt}{14.4pt}\selectfont (0.000)~~~} \hspace{6pt}\huxbpad{6pt}} &
+\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{6pt + 1em}\raggedleft \hspace{6pt} {\fontsize{12pt}{14.4pt}\selectfont (0.000)~~~} \hspace{6pt}\huxbpad{6pt}} &
+\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{6pt + 1em}\raggedleft \hspace{6pt} {\fontsize{12pt}{14.4pt}\selectfont (0.000)~~~} \hspace{6pt}\huxbpad{6pt}} &
+\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{6pt + 1em}\raggedleft \hspace{6pt} {\fontsize{12pt}{14.4pt}\selectfont (0.000)~~~} \hspace{6pt}\huxbpad{6pt}} &
+\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{6pt + 1em}\raggedleft \hspace{6pt} {\fontsize{12pt}{14.4pt}\selectfont (0.000)~~~} \hspace{6pt}\huxbpad{6pt}} \tabularnewline[-0.5pt]
 
 
 \hhline{}
 \arrayrulecolor{black}
 
-\multicolumn{1}{!{\huxvb{0, 0, 0}{0}}l!{\huxvb{0, 0, 0}{0}}}{\huxtpad{6pt + 1em}\raggedright \hspace{6pt} {\fontsize{11pt}{13.2pt}\selectfont Education} \hspace{6pt}\huxbpad{6pt}} &
-\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{6pt + 1em}\raggedleft \hspace{6pt} {\fontsize{11pt}{13.2pt}\selectfont 0.194 ***} \hspace{6pt}\huxbpad{6pt}} &
-\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{6pt + 1em}\raggedleft \hspace{6pt} {\fontsize{11pt}{13.2pt}\selectfont 0.309 ***} \hspace{6pt}\huxbpad{6pt}} &
-\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{6pt + 1em}\raggedleft \hspace{6pt} {\fontsize{11pt}{13.2pt}\selectfont 0.280 ***} \hspace{6pt}\huxbpad{6pt}} &
-\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{6pt + 1em}\raggedleft \hspace{6pt} {\fontsize{11pt}{13.2pt}\selectfont 0.327 ***} \hspace{6pt}\huxbpad{6pt}} &
-\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{6pt + 1em}\raggedleft \hspace{6pt} {\fontsize{11pt}{13.2pt}\selectfont 0.387 ***} \hspace{6pt}\huxbpad{6pt}} \tabularnewline[-0.5pt]
+\multicolumn{1}{!{\huxvb{0, 0, 0}{0}}l!{\huxvb{0, 0, 0}{0}}}{\huxtpad{6pt + 1em}\raggedright \hspace{6pt} {\fontsize{12pt}{14.4pt}\selectfont Education} \hspace{6pt}\huxbpad{6pt}} &
+\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{6pt + 1em}\raggedleft \hspace{6pt} {\fontsize{12pt}{14.4pt}\selectfont 0.194 ***} \hspace{6pt}\huxbpad{6pt}} &
+\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{6pt + 1em}\raggedleft \hspace{6pt} {\fontsize{12pt}{14.4pt}\selectfont 0.309 ***} \hspace{6pt}\huxbpad{6pt}} &
+\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{6pt + 1em}\raggedleft \hspace{6pt} {\fontsize{12pt}{14.4pt}\selectfont 0.280 ***} \hspace{6pt}\huxbpad{6pt}} &
+\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{6pt + 1em}\raggedleft \hspace{6pt} {\fontsize{12pt}{14.4pt}\selectfont 0.327 ***} \hspace{6pt}\huxbpad{6pt}} &
+\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{6pt + 1em}\raggedleft \hspace{6pt} {\fontsize{12pt}{14.4pt}\selectfont 0.387 ***} \hspace{6pt}\huxbpad{6pt}} \tabularnewline[-0.5pt]
 
 
 \hhline{}
 \arrayrulecolor{black}
 
-\multicolumn{1}{!{\huxvb{0, 0, 0}{0}}l!{\huxvb{0, 0, 0}{0}}}{\huxtpad{6pt + 1em}\raggedright \hspace{6pt} {\fontsize{11pt}{13.2pt}\selectfont } \hspace{6pt}\huxbpad{6pt}} &
-\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{6pt + 1em}\raggedleft \hspace{6pt} {\fontsize{11pt}{13.2pt}\selectfont (0.005)~~~} \hspace{6pt}\huxbpad{6pt}} &
-\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{6pt + 1em}\raggedleft \hspace{6pt} {\fontsize{11pt}{13.2pt}\selectfont (0.016)~~~} \hspace{6pt}\huxbpad{6pt}} &
-\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{6pt + 1em}\raggedleft \hspace{6pt} {\fontsize{11pt}{13.2pt}\selectfont (0.015)~~~} \hspace{6pt}\huxbpad{6pt}} &
-\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{6pt + 1em}\raggedleft \hspace{6pt} {\fontsize{11pt}{13.2pt}\selectfont (0.027)~~~} \hspace{6pt}\huxbpad{6pt}} &
-\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{6pt + 1em}\raggedleft \hspace{6pt} {\fontsize{11pt}{13.2pt}\selectfont (0.028)~~~} \hspace{6pt}\huxbpad{6pt}} \tabularnewline[-0.5pt]
+\multicolumn{1}{!{\huxvb{0, 0, 0}{0}}l!{\huxvb{0, 0, 0}{0}}}{\huxtpad{6pt + 1em}\raggedright \hspace{6pt} {\fontsize{12pt}{14.4pt}\selectfont } \hspace{6pt}\huxbpad{6pt}} &
+\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{6pt + 1em}\raggedleft \hspace{6pt} {\fontsize{12pt}{14.4pt}\selectfont (0.005)~~~} \hspace{6pt}\huxbpad{6pt}} &
+\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{6pt + 1em}\raggedleft \hspace{6pt} {\fontsize{12pt}{14.4pt}\selectfont (0.016)~~~} \hspace{6pt}\huxbpad{6pt}} &
+\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{6pt + 1em}\raggedleft \hspace{6pt} {\fontsize{12pt}{14.4pt}\selectfont (0.015)~~~} \hspace{6pt}\huxbpad{6pt}} &
+\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{6pt + 1em}\raggedleft \hspace{6pt} {\fontsize{12pt}{14.4pt}\selectfont (0.027)~~~} \hspace{6pt}\huxbpad{6pt}} &
+\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{6pt + 1em}\raggedleft \hspace{6pt} {\fontsize{12pt}{14.4pt}\selectfont (0.028)~~~} \hspace{6pt}\huxbpad{6pt}} \tabularnewline[-0.5pt]
 
 
 \hhline{}
 \arrayrulecolor{black}
 
-\multicolumn{1}{!{\huxvb{0, 0, 0}{0}}l!{\huxvb{0, 0, 0}{0}}}{\huxtpad{6pt + 1em}\raggedright \hspace{6pt} {\fontsize{11pt}{13.2pt}\selectfont Coloured} \hspace{6pt}\huxbpad{6pt}} &
-\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{6pt + 1em}\raggedleft \hspace{6pt} {\fontsize{11pt}{13.2pt}\selectfont 0.072~~~~} \hspace{6pt}\huxbpad{6pt}} &
-\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{6pt + 1em}\raggedleft \hspace{6pt} {\fontsize{11pt}{13.2pt}\selectfont 0.135 **~} \hspace{6pt}\huxbpad{6pt}} &
-\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{6pt + 1em}\raggedleft \hspace{6pt} {\fontsize{11pt}{13.2pt}\selectfont 0.124 **~} \hspace{6pt}\huxbpad{6pt}} &
-\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{6pt + 1em}\raggedleft \hspace{6pt} {\fontsize{11pt}{13.2pt}\selectfont 0.146 **~} \hspace{6pt}\huxbpad{6pt}} &
-\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{6pt + 1em}\raggedleft \hspace{6pt} {\fontsize{11pt}{13.2pt}\selectfont 0.248 ***} \hspace{6pt}\huxbpad{6pt}} \tabularnewline[-0.5pt]
+\multicolumn{1}{!{\huxvb{0, 0, 0}{0}}l!{\huxvb{0, 0, 0}{0}}}{\huxtpad{6pt + 1em}\raggedright \hspace{6pt} {\fontsize{12pt}{14.4pt}\selectfont Coloured} \hspace{6pt}\huxbpad{6pt}} &
+\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{6pt + 1em}\raggedleft \hspace{6pt} {\fontsize{12pt}{14.4pt}\selectfont 0.072~~~~} \hspace{6pt}\huxbpad{6pt}} &
+\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{6pt + 1em}\raggedleft \hspace{6pt} {\fontsize{12pt}{14.4pt}\selectfont 0.135 **~} \hspace{6pt}\huxbpad{6pt}} &
+\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{6pt + 1em}\raggedleft \hspace{6pt} {\fontsize{12pt}{14.4pt}\selectfont 0.124 **~} \hspace{6pt}\huxbpad{6pt}} &
+\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{6pt + 1em}\raggedleft \hspace{6pt} {\fontsize{12pt}{14.4pt}\selectfont 0.146 **~} \hspace{6pt}\huxbpad{6pt}} &
+\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{6pt + 1em}\raggedleft \hspace{6pt} {\fontsize{12pt}{14.4pt}\selectfont 0.248 ***} \hspace{6pt}\huxbpad{6pt}} \tabularnewline[-0.5pt]
 
 
 \hhline{}
 \arrayrulecolor{black}
 
-\multicolumn{1}{!{\huxvb{0, 0, 0}{0}}l!{\huxvb{0, 0, 0}{0}}}{\huxtpad{6pt + 1em}\raggedright \hspace{6pt} {\fontsize{11pt}{13.2pt}\selectfont } \hspace{6pt}\huxbpad{6pt}} &
-\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{6pt + 1em}\raggedleft \hspace{6pt} {\fontsize{11pt}{13.2pt}\selectfont (0.039)~~~} \hspace{6pt}\huxbpad{6pt}} &
-\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{6pt + 1em}\raggedleft \hspace{6pt} {\fontsize{11pt}{13.2pt}\selectfont (0.043)~~~} \hspace{6pt}\huxbpad{6pt}} &
-\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{6pt + 1em}\raggedleft \hspace{6pt} {\fontsize{11pt}{13.2pt}\selectfont (0.040)~~~} \hspace{6pt}\huxbpad{6pt}} &
-\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{6pt + 1em}\raggedleft \hspace{6pt} {\fontsize{11pt}{13.2pt}\selectfont (0.053)~~~} \hspace{6pt}\huxbpad{6pt}} &
-\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{6pt + 1em}\raggedleft \hspace{6pt} {\fontsize{11pt}{13.2pt}\selectfont (0.062)~~~} \hspace{6pt}\huxbpad{6pt}} \tabularnewline[-0.5pt]
+\multicolumn{1}{!{\huxvb{0, 0, 0}{0}}l!{\huxvb{0, 0, 0}{0}}}{\huxtpad{6pt + 1em}\raggedright \hspace{6pt} {\fontsize{12pt}{14.4pt}\selectfont } \hspace{6pt}\huxbpad{6pt}} &
+\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{6pt + 1em}\raggedleft \hspace{6pt} {\fontsize{12pt}{14.4pt}\selectfont (0.039)~~~} \hspace{6pt}\huxbpad{6pt}} &
+\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{6pt + 1em}\raggedleft \hspace{6pt} {\fontsize{12pt}{14.4pt}\selectfont (0.043)~~~} \hspace{6pt}\huxbpad{6pt}} &
+\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{6pt + 1em}\raggedleft \hspace{6pt} {\fontsize{12pt}{14.4pt}\selectfont (0.040)~~~} \hspace{6pt}\huxbpad{6pt}} &
+\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{6pt + 1em}\raggedleft \hspace{6pt} {\fontsize{12pt}{14.4pt}\selectfont (0.053)~~~} \hspace{6pt}\huxbpad{6pt}} &
+\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{6pt + 1em}\raggedleft \hspace{6pt} {\fontsize{12pt}{14.4pt}\selectfont (0.062)~~~} \hspace{6pt}\huxbpad{6pt}} \tabularnewline[-0.5pt]
 
 
 \hhline{}
 \arrayrulecolor{black}
 
-\multicolumn{1}{!{\huxvb{0, 0, 0}{0}}l!{\huxvb{0, 0, 0}{0}}}{\huxtpad{6pt + 1em}\raggedright \hspace{6pt} {\fontsize{11pt}{13.2pt}\selectfont Asian/Indian} \hspace{6pt}\huxbpad{6pt}} &
-\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{6pt + 1em}\raggedleft \hspace{6pt} {\fontsize{11pt}{13.2pt}\selectfont 0.388 ***} \hspace{6pt}\huxbpad{6pt}} &
-\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{6pt + 1em}\raggedleft \hspace{6pt} {\fontsize{11pt}{13.2pt}\selectfont 0.214 *~~} \hspace{6pt}\huxbpad{6pt}} &
-\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{6pt + 1em}\raggedleft \hspace{6pt} {\fontsize{11pt}{13.2pt}\selectfont 0.205~~~~} \hspace{6pt}\huxbpad{6pt}} &
-\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{6pt + 1em}\raggedleft \hspace{6pt} {\fontsize{11pt}{13.2pt}\selectfont 0.174~~~~} \hspace{6pt}\huxbpad{6pt}} &
-\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{6pt + 1em}\raggedleft \hspace{6pt} {\fontsize{11pt}{13.2pt}\selectfont 0.003~~~~} \hspace{6pt}\huxbpad{6pt}} \tabularnewline[-0.5pt]
+\multicolumn{1}{!{\huxvb{0, 0, 0}{0}}l!{\huxvb{0, 0, 0}{0}}}{\huxtpad{6pt + 1em}\raggedright \hspace{6pt} {\fontsize{12pt}{14.4pt}\selectfont Asian/Indian} \hspace{6pt}\huxbpad{6pt}} &
+\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{6pt + 1em}\raggedleft \hspace{6pt} {\fontsize{12pt}{14.4pt}\selectfont 0.388 ***} \hspace{6pt}\huxbpad{6pt}} &
+\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{6pt + 1em}\raggedleft \hspace{6pt} {\fontsize{12pt}{14.4pt}\selectfont 0.214 *~~} \hspace{6pt}\huxbpad{6pt}} &
+\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{6pt + 1em}\raggedleft \hspace{6pt} {\fontsize{12pt}{14.4pt}\selectfont 0.205~~~~} \hspace{6pt}\huxbpad{6pt}} &
+\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{6pt + 1em}\raggedleft \hspace{6pt} {\fontsize{12pt}{14.4pt}\selectfont 0.174~~~~} \hspace{6pt}\huxbpad{6pt}} &
+\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{6pt + 1em}\raggedleft \hspace{6pt} {\fontsize{12pt}{14.4pt}\selectfont 0.003~~~~} \hspace{6pt}\huxbpad{6pt}} \tabularnewline[-0.5pt]
 
 
 \hhline{}
 \arrayrulecolor{black}
 
-\multicolumn{1}{!{\huxvb{0, 0, 0}{0}}l!{\huxvb{0, 0, 0}{0}}}{\huxtpad{6pt + 1em}\raggedright \hspace{6pt} {\fontsize{11pt}{13.2pt}\selectfont } \hspace{6pt}\huxbpad{6pt}} &
-\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{6pt + 1em}\raggedleft \hspace{6pt} {\fontsize{11pt}{13.2pt}\selectfont (0.095)~~~} \hspace{6pt}\huxbpad{6pt}} &
-\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{6pt + 1em}\raggedleft \hspace{6pt} {\fontsize{11pt}{13.2pt}\selectfont (0.105)~~~} \hspace{6pt}\huxbpad{6pt}} &
-\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{6pt + 1em}\raggedleft \hspace{6pt} {\fontsize{11pt}{13.2pt}\selectfont (0.112)~~~} \hspace{6pt}\huxbpad{6pt}} &
-\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{6pt + 1em}\raggedleft \hspace{6pt} {\fontsize{11pt}{13.2pt}\selectfont (0.130)~~~} \hspace{6pt}\huxbpad{6pt}} &
-\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{6pt + 1em}\raggedleft \hspace{6pt} {\fontsize{11pt}{13.2pt}\selectfont (0.211)~~~} \hspace{6pt}\huxbpad{6pt}} \tabularnewline[-0.5pt]
+\multicolumn{1}{!{\huxvb{0, 0, 0}{0}}l!{\huxvb{0, 0, 0}{0}}}{\huxtpad{6pt + 1em}\raggedright \hspace{6pt} {\fontsize{12pt}{14.4pt}\selectfont } \hspace{6pt}\huxbpad{6pt}} &
+\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{6pt + 1em}\raggedleft \hspace{6pt} {\fontsize{12pt}{14.4pt}\selectfont (0.095)~~~} \hspace{6pt}\huxbpad{6pt}} &
+\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{6pt + 1em}\raggedleft \hspace{6pt} {\fontsize{12pt}{14.4pt}\selectfont (0.105)~~~} \hspace{6pt}\huxbpad{6pt}} &
+\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{6pt + 1em}\raggedleft \hspace{6pt} {\fontsize{12pt}{14.4pt}\selectfont (0.112)~~~} \hspace{6pt}\huxbpad{6pt}} &
+\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{6pt + 1em}\raggedleft \hspace{6pt} {\fontsize{12pt}{14.4pt}\selectfont (0.130)~~~} \hspace{6pt}\huxbpad{6pt}} &
+\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{6pt + 1em}\raggedleft \hspace{6pt} {\fontsize{12pt}{14.4pt}\selectfont (0.211)~~~} \hspace{6pt}\huxbpad{6pt}} \tabularnewline[-0.5pt]
 
 
 \hhline{}
 \arrayrulecolor{black}
 
-\multicolumn{1}{!{\huxvb{0, 0, 0}{0}}l!{\huxvb{0, 0, 0}{0}}}{\huxtpad{6pt + 1em}\raggedright \hspace{6pt} {\fontsize{11pt}{13.2pt}\selectfont White} \hspace{6pt}\huxbpad{6pt}} &
-\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{6pt + 1em}\raggedleft \hspace{6pt} {\fontsize{11pt}{13.2pt}\selectfont 0.689 ***} \hspace{6pt}\huxbpad{6pt}} &
-\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{6pt + 1em}\raggedleft \hspace{6pt} {\fontsize{11pt}{13.2pt}\selectfont 0.303 ***} \hspace{6pt}\huxbpad{6pt}} &
-\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{6pt + 1em}\raggedleft \hspace{6pt} {\fontsize{11pt}{13.2pt}\selectfont 0.408 ***} \hspace{6pt}\huxbpad{6pt}} &
-\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{6pt + 1em}\raggedleft \hspace{6pt} {\fontsize{11pt}{13.2pt}\selectfont 0.263 **~} \hspace{6pt}\huxbpad{6pt}} &
-\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{6pt + 1em}\raggedleft \hspace{6pt} {\fontsize{11pt}{13.2pt}\selectfont 0.163~~~~} \hspace{6pt}\huxbpad{6pt}} \tabularnewline[-0.5pt]
+\multicolumn{1}{!{\huxvb{0, 0, 0}{0}}l!{\huxvb{0, 0, 0}{0}}}{\huxtpad{6pt + 1em}\raggedright \hspace{6pt} {\fontsize{12pt}{14.4pt}\selectfont White} \hspace{6pt}\huxbpad{6pt}} &
+\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{6pt + 1em}\raggedleft \hspace{6pt} {\fontsize{12pt}{14.4pt}\selectfont 0.689 ***} \hspace{6pt}\huxbpad{6pt}} &
+\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{6pt + 1em}\raggedleft \hspace{6pt} {\fontsize{12pt}{14.4pt}\selectfont 0.303 ***} \hspace{6pt}\huxbpad{6pt}} &
+\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{6pt + 1em}\raggedleft \hspace{6pt} {\fontsize{12pt}{14.4pt}\selectfont 0.408 ***} \hspace{6pt}\huxbpad{6pt}} &
+\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{6pt + 1em}\raggedleft \hspace{6pt} {\fontsize{12pt}{14.4pt}\selectfont 0.263 **~} \hspace{6pt}\huxbpad{6pt}} &
+\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{6pt + 1em}\raggedleft \hspace{6pt} {\fontsize{12pt}{14.4pt}\selectfont 0.163~~~~} \hspace{6pt}\huxbpad{6pt}} \tabularnewline[-0.5pt]
 
 
 \hhline{}
 \arrayrulecolor{black}
 
-\multicolumn{1}{!{\huxvb{0, 0, 0}{0}}l!{\huxvb{0, 0, 0}{0}}}{\huxtpad{6pt + 1em}\raggedright \hspace{6pt} {\fontsize{11pt}{13.2pt}\selectfont } \hspace{6pt}\huxbpad{6pt}} &
-\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{6pt + 1em}\raggedleft \hspace{6pt} {\fontsize{11pt}{13.2pt}\selectfont (0.050)~~~} \hspace{6pt}\huxbpad{6pt}} &
-\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{6pt + 1em}\raggedleft \hspace{6pt} {\fontsize{11pt}{13.2pt}\selectfont (0.074)~~~} \hspace{6pt}\huxbpad{6pt}} &
-\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{6pt + 1em}\raggedleft \hspace{6pt} {\fontsize{11pt}{13.2pt}\selectfont (0.071)~~~} \hspace{6pt}\huxbpad{6pt}} &
-\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{6pt + 1em}\raggedleft \hspace{6pt} {\fontsize{11pt}{13.2pt}\selectfont (0.098)~~~} \hspace{6pt}\huxbpad{6pt}} &
-\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{6pt + 1em}\raggedleft \hspace{6pt} {\fontsize{11pt}{13.2pt}\selectfont (0.105)~~~} \hspace{6pt}\huxbpad{6pt}} \tabularnewline[-0.5pt]
+\multicolumn{1}{!{\huxvb{0, 0, 0}{0}}l!{\huxvb{0, 0, 0}{0}}}{\huxtpad{6pt + 1em}\raggedright \hspace{6pt} {\fontsize{12pt}{14.4pt}\selectfont } \hspace{6pt}\huxbpad{6pt}} &
+\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{6pt + 1em}\raggedleft \hspace{6pt} {\fontsize{12pt}{14.4pt}\selectfont (0.050)~~~} \hspace{6pt}\huxbpad{6pt}} &
+\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{6pt + 1em}\raggedleft \hspace{6pt} {\fontsize{12pt}{14.4pt}\selectfont (0.074)~~~} \hspace{6pt}\huxbpad{6pt}} &
+\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{6pt + 1em}\raggedleft \hspace{6pt} {\fontsize{12pt}{14.4pt}\selectfont (0.071)~~~} \hspace{6pt}\huxbpad{6pt}} &
+\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{6pt + 1em}\raggedleft \hspace{6pt} {\fontsize{12pt}{14.4pt}\selectfont (0.098)~~~} \hspace{6pt}\huxbpad{6pt}} &
+\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{6pt + 1em}\raggedleft \hspace{6pt} {\fontsize{12pt}{14.4pt}\selectfont (0.105)~~~} \hspace{6pt}\huxbpad{6pt}} \tabularnewline[-0.5pt]
 
 
 \hhline{}
 \arrayrulecolor{black}
 
-\multicolumn{1}{!{\huxvb{0, 0, 0}{0}}l!{\huxvb{0, 0, 0}{0}}}{\huxtpad{6pt + 1em}\raggedright \hspace{6pt} {\fontsize{11pt}{13.2pt}\selectfont Male} \hspace{6pt}\huxbpad{6pt}} &
-\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{6pt + 1em}\raggedleft \hspace{6pt} {\fontsize{11pt}{13.2pt}\selectfont 0.464 ***} \hspace{6pt}\huxbpad{6pt}} &
-\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{6pt + 1em}\raggedleft \hspace{6pt} {\fontsize{11pt}{13.2pt}\selectfont 0.490 ***} \hspace{6pt}\huxbpad{6pt}} &
-\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{6pt + 1em}\raggedleft \hspace{6pt} {\fontsize{11pt}{13.2pt}\selectfont 0.497 ***} \hspace{6pt}\huxbpad{6pt}} &
-\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{6pt + 1em}\raggedleft \hspace{6pt} {\fontsize{11pt}{13.2pt}\selectfont 0.526 ***} \hspace{6pt}\huxbpad{6pt}} &
-\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{6pt + 1em}\raggedleft \hspace{6pt} {\fontsize{11pt}{13.2pt}\selectfont 0.474 ***} \hspace{6pt}\huxbpad{6pt}} \tabularnewline[-0.5pt]
+\multicolumn{1}{!{\huxvb{0, 0, 0}{0}}l!{\huxvb{0, 0, 0}{0}}}{\huxtpad{6pt + 1em}\raggedright \hspace{6pt} {\fontsize{12pt}{14.4pt}\selectfont Male} \hspace{6pt}\huxbpad{6pt}} &
+\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{6pt + 1em}\raggedleft \hspace{6pt} {\fontsize{12pt}{14.4pt}\selectfont 0.464 ***} \hspace{6pt}\huxbpad{6pt}} &
+\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{6pt + 1em}\raggedleft \hspace{6pt} {\fontsize{12pt}{14.4pt}\selectfont 0.490 ***} \hspace{6pt}\huxbpad{6pt}} &
+\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{6pt + 1em}\raggedleft \hspace{6pt} {\fontsize{12pt}{14.4pt}\selectfont 0.497 ***} \hspace{6pt}\huxbpad{6pt}} &
+\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{6pt + 1em}\raggedleft \hspace{6pt} {\fontsize{12pt}{14.4pt}\selectfont 0.526 ***} \hspace{6pt}\huxbpad{6pt}} &
+\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{6pt + 1em}\raggedleft \hspace{6pt} {\fontsize{12pt}{14.4pt}\selectfont 0.474 ***} \hspace{6pt}\huxbpad{6pt}} \tabularnewline[-0.5pt]
 
 
 \hhline{}
 \arrayrulecolor{black}
 
-\multicolumn{1}{!{\huxvb{0, 0, 0}{0}}l!{\huxvb{0, 0, 0}{0}}}{\huxtpad{6pt + 1em}\raggedright \hspace{6pt} {\fontsize{11pt}{13.2pt}\selectfont } \hspace{6pt}\huxbpad{6pt}} &
-\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{6pt + 1em}\raggedleft \hspace{6pt} {\fontsize{11pt}{13.2pt}\selectfont (0.027)~~~} \hspace{6pt}\huxbpad{6pt}} &
-\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{6pt + 1em}\raggedleft \hspace{6pt} {\fontsize{11pt}{13.2pt}\selectfont (0.029)~~~} \hspace{6pt}\huxbpad{6pt}} &
-\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{6pt + 1em}\raggedleft \hspace{6pt} {\fontsize{11pt}{13.2pt}\selectfont (0.028)~~~} \hspace{6pt}\huxbpad{6pt}} &
-\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{6pt + 1em}\raggedleft \hspace{6pt} {\fontsize{11pt}{13.2pt}\selectfont (0.039)~~~} \hspace{6pt}\huxbpad{6pt}} &
-\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{6pt + 1em}\raggedleft \hspace{6pt} {\fontsize{11pt}{13.2pt}\selectfont (0.045)~~~} \hspace{6pt}\huxbpad{6pt}} \tabularnewline[-0.5pt]
+\multicolumn{1}{!{\huxvb{0, 0, 0}{0}}l!{\huxvb{0, 0, 0}{0}}}{\huxtpad{6pt + 1em}\raggedright \hspace{6pt} {\fontsize{12pt}{14.4pt}\selectfont } \hspace{6pt}\huxbpad{6pt}} &
+\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{6pt + 1em}\raggedleft \hspace{6pt} {\fontsize{12pt}{14.4pt}\selectfont (0.027)~~~} \hspace{6pt}\huxbpad{6pt}} &
+\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{6pt + 1em}\raggedleft \hspace{6pt} {\fontsize{12pt}{14.4pt}\selectfont (0.029)~~~} \hspace{6pt}\huxbpad{6pt}} &
+\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{6pt + 1em}\raggedleft \hspace{6pt} {\fontsize{12pt}{14.4pt}\selectfont (0.028)~~~} \hspace{6pt}\huxbpad{6pt}} &
+\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{6pt + 1em}\raggedleft \hspace{6pt} {\fontsize{12pt}{14.4pt}\selectfont (0.039)~~~} \hspace{6pt}\huxbpad{6pt}} &
+\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{6pt + 1em}\raggedleft \hspace{6pt} {\fontsize{12pt}{14.4pt}\selectfont (0.045)~~~} \hspace{6pt}\huxbpad{6pt}} \tabularnewline[-0.5pt]
 
 
 \hhline{>{\huxb{255, 255, 255}{0.4}}->{\huxb{0, 0, 0}{0.4}}->{\huxb{0, 0, 0}{0.4}}->{\huxb{0, 0, 0}{0.4}}->{\huxb{0, 0, 0}{0.4}}->{\huxb{0, 0, 0}{0.4}}-}
 \arrayrulecolor{black}
 
-\multicolumn{1}{!{\huxvb{0, 0, 0}{0}}l!{\huxvb{0, 0, 0}{0}}}{\huxtpad{6pt + 1em}\raggedright \hspace{6pt} {\fontsize{11pt}{13.2pt}\selectfont N} \hspace{6pt}\huxbpad{6pt}} &
-\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{6pt + 1em}\raggedleft \hspace{6pt} {\fontsize{11pt}{13.2pt}\selectfont 3376~~~~~~~~} \hspace{6pt}\huxbpad{6pt}} &
-\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{6pt + 1em}\raggedleft \hspace{6pt} {\fontsize{11pt}{13.2pt}\selectfont 3376~~~~~~~~} \hspace{6pt}\huxbpad{6pt}} &
-\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{6pt + 1em}\raggedleft \hspace{6pt} {\fontsize{11pt}{13.2pt}\selectfont 3613~~~~~~~~} \hspace{6pt}\huxbpad{6pt}} &
-\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{6pt + 1em}\raggedleft \hspace{6pt} {\fontsize{11pt}{13.2pt}\selectfont 2178~~~~~~~~} \hspace{6pt}\huxbpad{6pt}} &
-\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{6pt + 1em}\raggedleft \hspace{6pt} {\fontsize{11pt}{13.2pt}\selectfont 1747~~~~~~~~} \hspace{6pt}\huxbpad{6pt}} \tabularnewline[-0.5pt]
+\multicolumn{1}{!{\huxvb{0, 0, 0}{0}}l!{\huxvb{0, 0, 0}{0}}}{\huxtpad{6pt + 1em}\raggedright \hspace{6pt} {\fontsize{12pt}{14.4pt}\selectfont N} \hspace{6pt}\huxbpad{6pt}} &
+\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{6pt + 1em}\raggedleft \hspace{6pt} {\fontsize{12pt}{14.4pt}\selectfont 3376~~~~~~~~} \hspace{6pt}\huxbpad{6pt}} &
+\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{6pt + 1em}\raggedleft \hspace{6pt} {\fontsize{12pt}{14.4pt}\selectfont 3376~~~~~~~~} \hspace{6pt}\huxbpad{6pt}} &
+\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{6pt + 1em}\raggedleft \hspace{6pt} {\fontsize{12pt}{14.4pt}\selectfont 3613~~~~~~~~} \hspace{6pt}\huxbpad{6pt}} &
+\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{6pt + 1em}\raggedleft \hspace{6pt} {\fontsize{12pt}{14.4pt}\selectfont 2178~~~~~~~~} \hspace{6pt}\huxbpad{6pt}} &
+\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{6pt + 1em}\raggedleft \hspace{6pt} {\fontsize{12pt}{14.4pt}\selectfont 1747~~~~~~~~} \hspace{6pt}\huxbpad{6pt}} \tabularnewline[-0.5pt]
 
 
 \hhline{}
 \arrayrulecolor{black}
 
-\multicolumn{1}{!{\huxvb{0, 0, 0}{0}}l!{\huxvb{0, 0, 0}{0}}}{\huxtpad{6pt + 1em}\raggedright \hspace{6pt} {\fontsize{11pt}{13.2pt}\selectfont R2} \hspace{6pt}\huxbpad{6pt}} &
-\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{6pt + 1em}\raggedleft \hspace{6pt} {\fontsize{11pt}{13.2pt}\selectfont 0.456~~~~} \hspace{6pt}\huxbpad{6pt}} &
-\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{6pt + 1em}\raggedleft \hspace{6pt} {\fontsize{11pt}{13.2pt}\selectfont 0.364~~~~} \hspace{6pt}\huxbpad{6pt}} &
-\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{6pt + 1em}\raggedleft \hspace{6pt} {\fontsize{11pt}{13.2pt}\selectfont 0.368~~~~} \hspace{6pt}\huxbpad{6pt}} &
-\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{6pt + 1em}\raggedleft \hspace{6pt} {\fontsize{11pt}{13.2pt}\selectfont 0.337~~~~} \hspace{6pt}\huxbpad{6pt}} &
-\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{6pt + 1em}\raggedleft \hspace{6pt} {\fontsize{11pt}{13.2pt}\selectfont 0.247~~~~} \hspace{6pt}\huxbpad{6pt}} \tabularnewline[-0.5pt]
+\multicolumn{1}{!{\huxvb{0, 0, 0}{0}}l!{\huxvb{0, 0, 0}{0}}}{\huxtpad{6pt + 1em}\raggedright \hspace{6pt} {\fontsize{12pt}{14.4pt}\selectfont R2} \hspace{6pt}\huxbpad{6pt}} &
+\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{6pt + 1em}\raggedleft \hspace{6pt} {\fontsize{12pt}{14.4pt}\selectfont 0.456~~~~} \hspace{6pt}\huxbpad{6pt}} &
+\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{6pt + 1em}\raggedleft \hspace{6pt} {\fontsize{12pt}{14.4pt}\selectfont 0.364~~~~} \hspace{6pt}\huxbpad{6pt}} &
+\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{6pt + 1em}\raggedleft \hspace{6pt} {\fontsize{12pt}{14.4pt}\selectfont 0.368~~~~} \hspace{6pt}\huxbpad{6pt}} &
+\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{6pt + 1em}\raggedleft \hspace{6pt} {\fontsize{12pt}{14.4pt}\selectfont 0.337~~~~} \hspace{6pt}\huxbpad{6pt}} &
+\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{6pt + 1em}\raggedleft \hspace{6pt} {\fontsize{12pt}{14.4pt}\selectfont 0.247~~~~} \hspace{6pt}\huxbpad{6pt}} \tabularnewline[-0.5pt]
 
 
 \hhline{>{\huxb{0, 0, 0}{0.8}}->{\huxb{0, 0, 0}{0.8}}->{\huxb{0, 0, 0}{0.8}}->{\huxb{0, 0, 0}{0.8}}->{\huxb{0, 0, 0}{0.8}}->{\huxb{0, 0, 0}{0.8}}-}
 \arrayrulecolor{black}
 
-\multicolumn{6}{!{\huxvb{0, 0, 0}{0}}l!{\huxvb{0, 0, 0}{0}}}{\huxtpad{6pt + 1em}\raggedright \hspace{6pt} {\fontsize{11pt}{13.2pt}\selectfont  *** p $<$ 0.001;  ** p $<$ 0.01;  * p $<$ 0.05.} \hspace{6pt}\huxbpad{6pt}} \tabularnewline[-0.5pt]
+\multicolumn{6}{!{\huxvb{0, 0, 0}{0}}l!{\huxvb{0, 0, 0}{0}}}{\huxtpad{6pt + 1em}\raggedright \hspace{6pt} {\fontsize{12pt}{14.4pt}\selectfont  *** p $<$ 0.001;  ** p $<$ 0.01;  * p $<$ 0.05.} \hspace{6pt}\huxbpad{6pt}} \tabularnewline[-0.5pt]
 
 
 \hhline{}
@@ -906,130 +991,6 @@ plots the regression coefficients with their 95\% confidence intervals.
  
 
 \begin{center}\includegraphics{20346212CSproj_files/figure-latex/plot-1} \end{center}
-
-wn possibly long tables. Note that the following will fit on one page if
-it can, but cleanly spreads over multiple pages:
-
-\hypertarget{conclusion}{%
-\section{\texorpdfstring{Conclusion
-\label{conclusion}}{Conclusion }}\label{conclusion}}
-
-You should NOT write an extensive essay about the topic of interest, nor
-should you conduct an extensive literature review behind it: you should
-only reference articles that support the motivation for your econometric
-strategy (in the quest of finding a causal interpretation of a
-relationship that you are modeling). Provide descriptive statistics and
-graphs to aid in your discussion. The assignment should be between 3-6
-pages, including your tables and figures.
-
-You are required to go beyond simply estimating and presenting your
-results, but to convince the reader of their robustness by presenting
-alternative specifications. You should apply different estimators and
-specifications where possible. Discuss the shortcomings of the
-estimators in obtaining a causal effect and argue why your strategy is
-the best available to obtain a causal effect that satisfies relevant
-assumptions.
-
-Determine an effect of interest and find instrumental variables to
-estimate it causally. If possible, use more than one instrument. Given
-the LATE assumptions, try and explain why your results differ and which
-is likely to represent the causal effect you are looking for. Conduct
-sufficient specification tests to establish whether you are
-overidentifying your instrument set or whether the IVs shift the
-estimates enough to indicate that OLS would be inconsistent.
-
-\newpage
-
-\hypertarget{references}{%
-\section*{References}\label{references}}
-\addcontentsline{toc}{section}{References}
-
-\hypertarget{refs}{}
-\begin{CSLReferences}{1}{0}
-\leavevmode\hypertarget{ref-nids5}{}%
-Brophy, T., Branson, N., Daniels, R.C., Leibbrandt, M., Mlatsheni, C. \&
-Woolard, I. 2018. \emph{National income dynamics study panel user
-manual}. (Release 2018. Version 1). Cape Town: Southern Africa Labour;
-Development Research Unit; Southern Africa Labour; Development Research
-Unit.
-
-\leavevmode\hypertarget{ref-R}{}%
-Colonescu, C. 2016. Principles of econometrics with r. 11. {[}Online{]},
-Available: \url{https://bookdown.org/ccolonescu/RPoE4/}.
-
-\leavevmode\hypertarget{ref-hertz}{}%
-Hertz, T. 2003. Upward bias in the estimated returns to education:
-Evidence from south africa. \emph{American Economic Review}.
-93(4):1354--1368.
-
-\leavevmode\hypertarget{ref-ang}{}%
-Imbens, G.W. \& Angrist, J.D. 1994. Identification and estimation of
-local average treatment effects. \emph{Econometrica}. 62(2):467--475.
-{[}Online{]}, Available: \url{http://www.jstor.org/stable/2951620}.
-
-\leavevmode\hypertarget{ref-isco}{}%
-\emph{International standard classification of occupations: Structure,
-group definitions and correspondence tables}. 2012. (ISCO - 08).
-International Labour Office, Geneva; International Labour Organization.
-
-\leavevmode\hypertarget{ref-Texevier}{}%
-Katzke, N.F. 2017. \emph{{Texevier}: {P}ackage to create elsevier
-templates for rmarkdown}. Stellenbosch, South Africa: Bureau for
-Economic Research.
-
-\leavevmode\hypertarget{ref-return}{}%
-Koop, G. \& Tobias, J.L. 2004. Learning about heterogeneity in returns
-to schooling. \emph{Journal of Applied Econometrics}. 19(7):827--849.
-{[}Online{]}, Available: \url{http://www.jstor.org/stable/25146329}.
-
-\leavevmode\hypertarget{ref-disc}{}%
-Lang, K. 1993. \emph{Ability bias, discount rate bias and the return to
-education}. (MPRA Paper). University Library of Munich, Germany.
-{[}Online{]}, Available:
-\url{https://EconPapers.repec.org/RePEc:pra:mprapa:24651}.
-
-\leavevmode\hypertarget{ref-mince}{}%
-Mincer, J. 1974. \emph{Schooling, experience and earnings}. National
-Bureau of Economics, New York: Columbia University Press.
-
-\leavevmode\hypertarget{ref-nids}{}%
-\emph{National income dynamics study 2017, wave 5 dataset}. 2018. Cape
-Town, South Africa: Department of Planning, Monitoring,; Evaluation
-{[}funding agency{]} \& DataFirst {[}distributor{]}. {[}Online{]},
-Available: \url{https://doi.org/10.25828/fw3h-v708}.
-
-\leavevmode\hypertarget{ref-metrics}{}%
-Stock, J. H. \& Watson, M.W. 2015. \emph{Introduction to econometrics,
-third update, global edition}. Pearson Education Limited.
-
-\leavevmode\hypertarget{ref-metrics1}{}%
-Venables, W.N. \& Smith, D.M. 2010. \emph{{R-Intro}: {A}n introduction
-to r}. {[}Online{]}, Available:
-\url{https://cran.r-project.org/doc/manuals/r-release/R-intro.pdf}.
-
-\leavevmode\hypertarget{ref-nids1}{}%
-Villiers, L. de, Leibbrandt, M. \& Woolard, I. 2009. \emph{Methodology:
-Report on NIDS wave 1}. (Technical Paper no. 1). Cape Town: Southern
-Africa Labour; Development Research Unit; Southern Africa Labour;
-Development Research Unit.
-
-\end{CSLReferences}
-
-\newpage
-
-\hypertarget{appendix}{%
-\section*{Appendix}\label{appendix}}
-\addcontentsline{toc}{section}{Appendix}
-
-\hypertarget{appendix-a}{%
-\subsection*{Appendix A}\label{appendix-a}}
-\addcontentsline{toc}{subsection}{Appendix A}
-
-Some appendix information here
-
-\hypertarget{appendix-b}{%
-\subsection*{Appendix B}\label{appendix-b}}
-\addcontentsline{toc}{subsection}{Appendix B}
 
 \bibliography{Tex/ref}
 
